@@ -66,10 +66,10 @@ public class ImageEditor {
         return render(previewImage);
     }
 
-    public BufferedImage render(BufferedImage image) {
+    private BufferedImage render(BufferedImage image) {
         copiedImage = Utils.deepCopyImage(image);  // nie zmieniamy oryginalu
 
-        for (int i=0; i<filterStrategies.length; i++) {
+        for (int i=0; i<adjustmentStrategies.length; i++) {
             if (state.adjustmentsUsed[i] != 0)
                 adjustmentStrategies[i].applyAdjustment(copiedImage, state.adjustmentsUsed[i]);
         }
