@@ -12,48 +12,41 @@ import ImageEditor.Filters.Implem.*;
 import ImageEditor.Core.Utils;
 
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.EnumMap;
 
 
 public class ImageEditor {
     private final BufferedImage originalImage;
     private ImageState state;
-
-    private final EnumMap<FilterType, FilterStrategy> filterStrategies;
-    private final EnumMap<AdjustmentType, AdjustmentStrategy> adjustmentStrategies;
-
     private HistoryManager history;
     private IOManager io;
     private ImageRenderer imageRenderer;
 
 
-    public ImageEditor(String filepath) {
-        io = new IOManager(filepath);
+    public ImageEditor(String filepath) throws IOException, IllegalArgumentException {
+        this.io = new IOManager(filepath);
 
-        originalImage = io.getImage();
-        previewImage = Utils.scaleDown(originalImage, 60);
-
-        adjustmentStrategies = new EnumMap<>(AdjustmentType.class);
-        for(AdjustmentType type : AdjustmentType.values())
-            adjustmentStrategies.put(type, Utils.adjustment_factory(type));
-
-        filterStrategies = new EnumMap<>(FilterType.class);
-        for(FilterType type : FilterType.values())
-            filterStrategies.put(type, Utils.filter_factory(type));
+        this.originalImage = io.getImage();
 
         this.history = new HistoryManager();
         this.state = new  ImageState();
-        this.imageRenderer = new ImageRenderer();
+        this.imageRenderer = new ImageRenderer(originalImage);
     }
 
     public void applyAdjustment(AdjustmentType type, int value){
         state.getAdjustmentState().put(type, value);
-        history.update();
+//        history.update();
     }
 
     public void applyFilter(FilterType type){
         state.setFilter(type);
-        history.update();
+//        history.update();
+    }
+
+    public void export(String fileFormat, String filename)throws IOException{
+        io.exportImage(imageRenderer.render(state), fileFormat, filename);
     }
 
 

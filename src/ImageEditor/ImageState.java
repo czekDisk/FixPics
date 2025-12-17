@@ -34,8 +34,4 @@ public class ImageState {
         this.adjustmentState = adjustmentState;
     }
 
-    //to expand in the future
-    //Temporary solutions often become permanent problems.
-    //
-    //Craig Bruce
 }
