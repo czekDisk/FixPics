@@ -1,6 +1,7 @@
 package ImageEditor.Filters.CustomFilters;
 
 import ImageEditor.Filters.FilterStrategy;
+import ImageEditor.ImageState;
 
 import java.awt.image.BufferedImage;
 
@@ -17,9 +18,11 @@ public class CustomFilter implements FilterStrategy {
     private int hueValue = 0;
     private int sharpnessValue = 0;
 
+    public CustomFilter(ImageState state) {
 
+    }
 
-    public BufferedImage applyFilter(BufferedImage img) {
+    public void applyFilter(BufferedImage img) {
         //TODO
     }
 
