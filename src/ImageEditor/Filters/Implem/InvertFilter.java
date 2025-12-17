@@ -5,7 +5,13 @@ import ImageEditor.Filters.FilterStrategy;
 import java.awt.image.BufferedImage;
 
 public class InvertFilter extends FilterStrategy {
-    public void applyFilter(BufferedImage img, int value) {
+    //filtry po porstu nakładają filr na obraz
+
+    /**
+     *funkcja nakłada na image filtr
+     * @param image obraz
+     */
+    public void applyFilter(BufferedImage image) {
         //TODO
     }
 }

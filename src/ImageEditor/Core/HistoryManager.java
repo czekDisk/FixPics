@@ -13,7 +13,7 @@ public class HistoryManager {
     //TODO zaimplementuj undo i redo
     // proszę zrób to za pomocą stosu
 
-    private ArrayList<ImageState> history = new ArrayList<>(5);
+    private ArrayList<ImageState> history = new ArrayList<>(10);
     private int index;
 
     public void push(BufferedImage image) {
