@@ -4,7 +4,7 @@ import ImageEditor.Filters.FilterStrategy;
 
 import java.awt.image.BufferedImage;
 
-public class CustomFilter extends FilterStrategy {
+public class CustomFilter implements FilterStrategy {
     //TODO filtr przechowujący ustawione wartości dla funkcji z BasicEditor
     // i nakładający funkcje o tych wartościach na obraz
 

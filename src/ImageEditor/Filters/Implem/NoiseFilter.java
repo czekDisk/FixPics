@@ -4,7 +4,7 @@ import ImageEditor.Filters.FilterStrategy;
 
 import java.awt.image.BufferedImage;
 
-public class NoiseFilter extends FilterStrategy {
+public class NoiseFilter implements FilterStrategy {
     //filtry po porstu nakładają filr na obraz
 
     /**

@@ -21,7 +21,7 @@ public class HistoryManager {
     }
 
     public void undo(){
-        history = history.
+
     }
 
     public void redo(){

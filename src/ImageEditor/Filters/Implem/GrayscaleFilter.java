@@ -4,7 +4,7 @@ import ImageEditor.Filters.FilterStrategy;
 
 import java.awt.image.BufferedImage;
 
-public class GrayscaleFilter extends FilterStrategy {
+public class GrayscaleFilter implements FilterStrategy {
     //filtry po porstu nakładają filr na obraz
 
     /**

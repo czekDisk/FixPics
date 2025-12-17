@@ -17,13 +17,8 @@ public class Utils {
     }
 
     static public BufferedImage deepCopyImage(BufferedImage image) {
-        // TODO: Sprawdzic czy nie da sie optymalniej zrobic kopii
         BufferedImage copy = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-        for (int x=0; x<image.getWidth(); x++) {
-            for (int y=0; y<image.getHeight(); y++) {
-                copy.setRGB(x, y, image.getRGB(x, y));
-            }
-        }
+        copy.setData(image.getData());
 
         return copy;
     }

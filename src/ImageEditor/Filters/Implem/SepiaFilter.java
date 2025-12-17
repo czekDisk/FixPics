@@ -4,7 +4,7 @@ import ImageEditor.Filters.FilterStrategy;
 
 import java.awt.image.BufferedImage;
 
-public class SepiaFilter extends FilterStrategy {
+public class SepiaFilter implements FilterStrategy {
     //filtry po porstu nakładają filr na obraz
 
     /**

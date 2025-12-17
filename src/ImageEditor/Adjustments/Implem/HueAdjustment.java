@@ -4,7 +4,7 @@ import ImageEditor.Adjustments.AdjustmentStrategy;
 
 import java.awt.image.BufferedImage;
 
-public class HueAdjustment extends AdjustmentStrategy {
+public class HueAdjustment implements AdjustmentStrategy {
     //integer zmiany przyjmuje wartości od -100 do 100 jako procent zmiany
     //dodaj więc skalowanie w sumacyjnych funkcjach
 
