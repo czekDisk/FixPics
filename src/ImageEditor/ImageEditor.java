@@ -1,20 +1,15 @@
 package ImageEditor;
 
-import ImageEditor.Adjustments.AdjustmentStrategy;
 import ImageEditor.Adjustments.AdjustmentType;
 import ImageEditor.Adjustments.Implem.*;
 import ImageEditor.Core.HistoryManager;
 import ImageEditor.Core.IOManager;
 import ImageEditor.Core.ImageRenderer;
-import ImageEditor.Filters.FilterStrategy;
 import ImageEditor.Filters.FilterType;
 import ImageEditor.Filters.Implem.*;
-import ImageEditor.Core.Utils;
 
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.EnumMap;
 
 
 public class ImageEditor {
@@ -45,7 +40,7 @@ public class ImageEditor {
 //        history.update();
     }
 
-    public void export(String fileFormat, String filename)throws IOException{
+    public void export(String fileFormat, String filename) throws IOException{
         io.exportImage(imageRenderer.render(state), fileFormat, filename);
     }
 
