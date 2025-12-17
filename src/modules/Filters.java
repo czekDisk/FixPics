@@ -55,4 +55,4 @@ public class Filters {
         SepiaFilter filter = new SepiaFilter();
         filter.applyFilter(image, value);
     }
-}\
+}
