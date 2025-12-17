@@ -12,9 +12,10 @@ import java.awt.image.BufferedImage;
 public class Utils {
 
     //może dodaj dynamiczne skalowanie w zależności od wymiarów obrazu
-    static public BufferedImage scaleDown(BufferedImage image, int value) {
-        //TODO or use from std lib if too hard
-    }
+//    static public BufferedImage scaleDown(BufferedImage image, int value) {
+//        //TODO or use from std lib if too hard
+//        return
+//    }
 
     static public BufferedImage deepCopyImage(BufferedImage image) {
         BufferedImage copy = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
