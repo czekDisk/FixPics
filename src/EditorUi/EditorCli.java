@@ -1,12 +1,13 @@
-package EditorUI;
+package EditorUi;
 
 import ImageEditor.Adjustments.AdjustmentType;
 import ImageEditor.Filters.FilterType;
+import ImageEditor.ImageEditor;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Scanner;
 
-public class ImageEditorCLI {
+public class EditorCli {
 
     private ImageEditor editor;
     private final Scanner scanner = new Scanner(System.in);
@@ -20,7 +21,7 @@ public class ImageEditorCLI {
                 case 1 -> loadImage();
                 case 2 -> filtersMenu();
                 case 3 -> adjustmentsMenu();
-                case 4 -> renderPreview();
+                case 4 -> exportImage();
                 case 0 -> {
                     System.out.println("Exit.");
                     return;
@@ -36,8 +37,9 @@ public class ImageEditorCLI {
         System.out.println("1. Load image");
         System.out.println("2. Filters");
         System.out.println("3. Adjustments");
-        System.out.println("4. Render preview");
+        System.out.println("4. Export image");
         System.out.println("0. Exit");
+        System.out.print("Choice: ");
     }
 
     private void loadImage() {
@@ -47,9 +49,6 @@ public class ImageEditorCLI {
 
         try {
             editor = new ImageEditor(path);
-            editor.state = new ImageState();
-            editor.state.filtersUsed = new ArrayList<>();
-
             System.out.println("Image loaded successfully.");
         } catch (Exception e) {
             System.out.println("Failed to load image: " + e.getMessage());
@@ -64,10 +63,8 @@ public class ImageEditorCLI {
         System.out.println("\n Filters ");
 
         for (int i = 0; i < filters.length; i++) {
-            boolean active = editor.state.filtersUsed.contains(filters[i]);
-            System.out.printf("%d %s %s%n",
+            System.out.printf("%d %s%n",
                     i,
-                    active ? "[X]" : "[ ]",
                     filters[i]);
         }
 
@@ -81,14 +78,8 @@ public class ImageEditorCLI {
         }
 
         FilterType selected = filters[choice];
-
-        if (editor.state.filtersUsed.contains(selected)) {
-            editor.state.filtersUsed.remove(selected);
-            System.out.println(selected + " removed.");
-        } else {
-            editor.applyFilter(selected);
-            System.out.println(selected + " added.");
-        }
+        editor.applyFilter(selected);
+        System.out.println(selected + " applied.");
     }
 
     private void adjustmentsMenu() {
@@ -98,9 +89,8 @@ public class ImageEditorCLI {
         System.out.println("\n Adjustments ");
 
         for (int i = 0; i < adjustments.length; i++) {
-            int value = editor.state.adjustmentsUsed[i];
-            System.out.printf("%d %s (current: %d)%n",
-                    i, adjustments[i], value);
+            System.out.printf("%d %s%n",
+                    i, adjustments[i]);
         }
 
         System.out.println("Choose adjustment (-1 to back):");
@@ -119,12 +109,21 @@ public class ImageEditorCLI {
         System.out.println(adjustments[choice] + " set to " + value);
     }
 
-    private void renderPreview() {
+    private void exportImage() {
         if (!checkImageLoaded()) return;
 
-        editor.renderPreview();
-        System.out.println("Preview rendered.");
-        System.out.println("Active filters: " + editor.state.filtersUsed);
+        scanner.nextLine();
+        System.out.print("Enter image path: ");
+        String path = scanner.nextLine();
+        System.out.print("Enter format (jpg/png/...): ");
+        String format = scanner.nextLine();
+
+        try {
+            editor.export(format, path);
+            System.out.println("Image exported successfully to " + path);
+        } catch (IOException e) {
+            System.out.println("Failed to export image.");
+        }
     }
 
 
