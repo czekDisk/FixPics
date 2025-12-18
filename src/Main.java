@@ -3,7 +3,7 @@ import EditorUi.EditorCli;
 import java.io.IOException;
 
 public class Main {
-    void main() throws IOException {
+    static void main() {
         EditorCli cli = new EditorCli();
         cli.start();
 
