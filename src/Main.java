@@ -1,9 +1,8 @@
-package ImageEditor;
-package EditorUi
+import ImageEditor.Filters.FilterType;
+import ImageEditor.ImageEditor;
 
-public class Main {
-    public void main(String[] args) {
-        ImageEditorCLI cli = new ImageEditorCLI("image.jpg");
-        cli.start();
-    }
+void main() throws IOException {
+    ImageEditor imageEditor = new ImageEditor("obrazek.jpg");
+    imageEditor.applyFilter(FilterType.GRAYSCALE);
+    imageEditor.export("jpg", "obrazek_grayscale.jpg");
 }

@@ -4,8 +4,14 @@ import ImageEditor.Filters.FilterStrategy;
 
 import java.awt.image.BufferedImage;
 
-public class BlurFilter extends FilterStrategy{
-    public void applyFilter(BufferedImage img, int value) {
+public class BlurFilter implements FilterStrategy{
+    //filtry po porstu nakładają filr na obraz
+
+    /**
+     *funkcja nakłada na image filtr
+     * @param image obraz
+     */
+    public void applyFilter(BufferedImage image) {
         //TODO
     }
 }
