@@ -1,6 +1,8 @@
 package ImageEditor.Adjustments;
 
-public enum AdjustmentType {
+import ImageEditor.Core.OperationType;
+
+public enum AdjustmentType implements OperationType {
     BRIGHTNESS,
     CONTRAST,
     EXPOSURE,

@@ -1,6 +1,8 @@
 package ImageEditor.Filters;
 
-public enum FilterType {
+import ImageEditor.Core.OperationType;
+
+public enum FilterType implements OperationType {
     NOFILTER,
     BLUR,
     GRAYSCALE,
