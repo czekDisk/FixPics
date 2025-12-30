@@ -1,6 +1,4 @@
-package ImageEditor.Adjustments;
-
-import ImageEditor.Core.OperationType;
+package ImageEditor.OperationTags;
 
 public enum AdjustmentType implements OperationType {
     BRIGHTNESS,

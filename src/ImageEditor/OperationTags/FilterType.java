@@ -1,4 +1,3 @@
 package ImageEditor.OperationTags;
 
-public interface Filters {
-}
+public interface FilterType extends OperationType{}

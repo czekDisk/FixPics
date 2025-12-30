@@ -1,3 +1,3 @@
-package ImageEditor.Core;
+package ImageEditor.OperationTags;
 
 public interface OperationType {}

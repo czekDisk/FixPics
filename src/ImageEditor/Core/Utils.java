@@ -1,10 +1,10 @@
 package ImageEditor.Core;
 
 import ImageEditor.Adjustments.AdjustmentStrategy;
-import ImageEditor.Adjustments.AdjustmentType;
+import ImageEditor.OperationTags.AdjustmentType;
 import ImageEditor.Adjustments.Implem.*;
 import ImageEditor.Filters.FilterStrategy;
-import ImageEditor.Filters.FilterType;
+import ImageEditor.OperationTags.FilterPresets;
 import ImageEditor.Filters.Implem.*;
 
 import java.awt.image.BufferedImage;
@@ -30,7 +30,7 @@ public class Utils {
     }
 
 
-    static public FilterStrategy filter_factory(FilterType type){
+    static public FilterStrategy filter_factory(FilterPresets type){
         return switch (type) {
             case NOFILTER -> null;//?
             case BLUR -> new BlurFilter();

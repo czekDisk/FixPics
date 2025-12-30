@@ -1,11 +1,10 @@
 package ImageEditor;
 
-import ImageEditor.Adjustments.AdjustmentType;
-import ImageEditor.Filters.FilterType;
+import ImageEditor.OperationTags.AdjustmentType;
+import ImageEditor.OperationTags.FilterPresets;
+import ImageEditor.OperationTags.FilterType;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 
 public class ImageState {
     private EnumMap<AdjustmentType, Integer> adjustmentState;
@@ -16,7 +15,7 @@ public class ImageState {
         for (AdjustmentType type : AdjustmentType.values())
             adjustmentState.put(type, 0);
 
-        filter = FilterType.NOFILTER;
+        filter = FilterPresets.NOFILTER;
     }
 
 
@@ -35,3 +34,5 @@ public class ImageState {
     }
 
 }
+
+

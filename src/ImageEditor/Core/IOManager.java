@@ -1,5 +1,7 @@
 package ImageEditor.Core;
 
+import ImageEditor.IllegalFormatException;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -13,12 +15,12 @@ public class IOManager {
 
 
 
-    public IOManager(String filepath) throws IllegalArgumentException {
+    public IOManager(String filepath) throws IllegalFormatException {
         this.file = new File(filepath);
 
         int dotIndex = filepath.lastIndexOf('.');
         if (dotIndex == -1 || dotIndex == filepath.length() - 1)
-            throw new IllegalArgumentException("Invalid file format");
+            throw new IllegalFormatException("Illegal file format");
         else{
             this.fileFormat = filepath.substring(dotIndex + 1);
         }

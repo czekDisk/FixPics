@@ -1,8 +1,6 @@
-package ImageEditor.Filters;
+package ImageEditor.OperationTags;
 
-import ImageEditor.Core.OperationType;
-
-public enum FilterType implements OperationType {
+public enum FilterPresets implements FilterType {
     NOFILTER,
     BLUR,
     GRAYSCALE,
