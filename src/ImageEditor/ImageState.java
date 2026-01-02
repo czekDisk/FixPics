@@ -18,6 +18,23 @@ public class ImageState {
         filter = FilterPresets.NOFILTER;
     }
 
+    public ImageState(ImageState other){
+        this.adjustmentState = new EnumMap<>(other.adjustmentState);
+        this.filter = other.filter;
+    }
+
+    public void copyFrom(ImageState other){
+        this.adjustmentState = new EnumMap<>(other.adjustmentState);
+        this.filter = other.filter;
+    }
+
+    public void clear(){
+        for (AdjustmentType type : AdjustmentType.values()){
+            adjustmentState.put(type, 0);
+        }
+
+        filter = FilterPresets.NOFILTER;
+    }
 
     public EnumMap<AdjustmentType, Integer> getAdjustmentState() {
         return adjustmentState;

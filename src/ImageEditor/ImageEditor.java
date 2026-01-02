@@ -5,6 +5,7 @@ import ImageEditor.OperationTags.AdjustmentType;
 import ImageEditor.Core.HistoryManager;
 import ImageEditor.Core.IOManager;
 import ImageEditor.Core.ImageRenderer;
+import ImageEditor.OperationTags.CustomFilterIndex;
 import ImageEditor.OperationTags.FilterPresets;
 import ImageEditor.OperationTags.FilterType;
 
@@ -25,23 +26,22 @@ public class ImageEditor {
         this.io = new IOManager(filepath);
 
         this.originalImage = io.getImage();
-
-        this.history = new HistoryManager();
         this.state = new  ImageState();
-        this.imageRenderer = new ImageRenderer(originalImage);
+        this.history = new HistoryManager(state);
         this.customFilterManager = new CustomFilterManager();
+        this.imageRenderer = new ImageRenderer(originalImage, customFilterManager);
 
     }
 
     public void applyAdjustment(AdjustmentType type, int value){
         state.getAdjustmentState().put(type, value);
-//        history.update();
+        history.update();
     }
 
     public int applyFilter(FilterType type){
         if (type.getClass() == FilterPresets.class){
             state.setFilter(type);
-  //        history.update();
+            history.update();
             return 0;
         }
         else {
@@ -50,10 +50,27 @@ public class ImageEditor {
             }
             else{
                 state.setFilter(type);
-                //        history.update();
+                history.update();
                 return 0;
             }
         }
+    }
+
+    public void undo(){
+        history.undo();
+    }
+
+    public void redo(){
+        history.redo();
+    }
+
+    public void changeCustomFilter(CustomFilterIndex index){
+        customFilterManager.changeFilter(state, index);
+    }
+
+
+    public void export()throws IOException{
+        io.exportImage(imageRenderer.render(state));
     }
 
     public void export(String fileFormat, String filename)throws IOException{

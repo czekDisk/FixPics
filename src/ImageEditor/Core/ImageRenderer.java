@@ -1,8 +1,11 @@
 package ImageEditor.Core;
 
 import ImageEditor.Adjustments.AdjustmentStrategy;
+import ImageEditor.Filters.CustomFilters.CustomFilter;
+import ImageEditor.Filters.CustomFilters.CustomFilterManager;
 import ImageEditor.OperationTags.AdjustmentType;
 import ImageEditor.Filters.FilterStrategy;
+import ImageEditor.OperationTags.CustomFilterIndex;
 import ImageEditor.OperationTags.FilterPresets;
 import ImageEditor.ImageState;
 import ImageEditor.OperationTags.OperationType;
@@ -15,17 +18,14 @@ public class ImageRenderer {
     private BufferedImage imageOriginal;
     private BufferedImage imagePreview;
 
-    private ImageDAG imageDAG;
-
-
     private final EnumMap<FilterPresets, FilterStrategy> filterStrategies;
     private final EnumMap<AdjustmentType, AdjustmentStrategy> adjustmentStrategies;
+    private final EnumMap<CustomFilterIndex, CustomFilter> customFilters;
 
-
-    public ImageRenderer(BufferedImage imageOriginal){
+    public ImageRenderer(BufferedImage imageOriginal, CustomFilterManager manager){
+        this. customFilters = manager.getCustomFilters();
         this.imageOriginal = imageOriginal;
-        imagePreview = Utils.scaleDown(imageOriginal);
-        previewCache = Utils.deepCopyImage(imagePreview);
+        imagePreview = null;
 
         adjustmentStrategies = new EnumMap<>(AdjustmentType.class);
         for(AdjustmentType type : AdjustmentType.values())
@@ -38,9 +38,6 @@ public class ImageRenderer {
 
 
 
-    public void update(OperationType operationType){
-
-    }
 
 
 
@@ -49,10 +46,7 @@ public class ImageRenderer {
 
 
 
-
-
-
-    public BufferedImage renderPreview(ImageState imageState){
+    public BufferedImage renderPreview(ImageState imageState, int scale){
         BufferedImage copiedImage = Utils.deepCopyImage(imagePreview);  // nie zmieniamy oryginalu
 
         for (AdjustmentType type : AdjustmentType.values()) {
@@ -71,7 +65,14 @@ public class ImageRenderer {
             adjustmentStrategies.get(type).applyAdjustment(copiedImage, imageState.getAdjustmentState().get(type));
         }
 
-        filterStrategies.get(imageState.getFilter()).applyFilter(copiedImage);
+        if (imageState.getFilter().getClass() == FilterPresets.class){
+            if (imageState.getFilter() != FilterPresets.NOFILTER)
+                filterStrategies.get(imageState.getFilter()).applyFilter(copiedImage);
+        }
+        else{
+            customFilters.get(imageState.getFilter()).applyFilter(copiedImage);
+        }
+
 
         return copiedImage;
     }

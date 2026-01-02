@@ -3,6 +3,7 @@ package ImageEditor.Core;
 import ImageEditor.ImageState;
 import ImageEditor.OperationTags.OperationType;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.nio.Buffer;
 import java.util.ArrayList;
@@ -12,31 +13,23 @@ import java.util.Stack;
 
 
 
-class HistoryNode{
-    OperationType type;
-    int oldValue;
-    int newValue;
-
-    public HistoryNode(OperationType type, int oldValue, int newValue){
-        this.type = type;
-        this.oldValue = oldValue;
-        this.newValue = newValue;
-    }
-}
-
 public class HistoryManager {
-    private Stack<HistoryNode> undo;
-    private Stack<HistoryNode> redo;
+    private ImageState currState;
+    private Stack<ImageState> undo;
+    private Stack<ImageState> redo;
 
 
-    public HistoryManager(){
-        redo = new Stack<>();
-        undo = new Stack<>();
+    public HistoryManager(ImageState state){
+        this.currState = state;
+        this.redo = new Stack<>();
+        this.undo = new Stack<>();
     }
 
-    public void update(OperationType type, int oldValue, int newValue){
-        if (!redo.empty()) redo.clear();
-        undo.push(new HistoryNode(type, oldValue, newValue));
+
+    public void update(){
+        redo.clear();
+
+        undo.push(new ImageState(currState));
     }
 
     public boolean isUndoable(){
@@ -48,13 +41,25 @@ public class HistoryManager {
     }
 
     public void undo(){
+        if (!isUndoable()) return;
+        redo.push(undo.pop());
+        if (!undo.empty()){
+            currState.copyFrom(undo.peek());
+        }
+        else{
+            currState.clear();
+        }
 
     }
 
 
 
     public void redo(){
-
+        if (!isRedoable()) return;
+        undo.push(redo.pop());
+        currState.copyFrom(undo.peek());
     }
 
 }
+
+

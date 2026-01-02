@@ -8,17 +8,34 @@ import ImageEditor.ImageState;
 
 import java.awt.image.BufferedImage;
 import java.util.EnumMap;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class CustomFilter extends FilterStrategy {
     private EnumMap<AdjustmentType, Integer> presets;
-    private final EnumMap<AdjustmentType, AdjustmentStrategy> adjustmentStrategies;
+    private transient final EnumMap<AdjustmentType, AdjustmentStrategy> adjustmentStrategies;
 
+
+    public CustomFilter() {
+        adjustmentStrategies = new EnumMap<>(AdjustmentType.class);
+        for (AdjustmentType type : AdjustmentType.values()) {
+            adjustmentStrategies.put(type, Utils.adjustment_factory(type));
+        }
+
+        presets = new EnumMap<>(AdjustmentType.class);
+        // Możesz pozostawić puste lub inicjalizować defaultowo
+        for (AdjustmentType type : AdjustmentType.values()) {
+            presets.put(type, 0);
+        }
+    }
 
     public CustomFilter(ImageState state){
         adjustmentStrategies = new EnumMap<>(AdjustmentType.class);
         for (AdjustmentType type : AdjustmentType.values())
             adjustmentStrategies.put(type, Utils.adjustment_factory(type));
 
+        presets = new EnumMap<>(AdjustmentType.class);
         for (AdjustmentType type : AdjustmentType.values())
             presets.put(type, state.getAdjustmentState().get(type));
     }

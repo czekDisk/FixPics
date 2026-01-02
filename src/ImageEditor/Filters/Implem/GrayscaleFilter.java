@@ -30,7 +30,7 @@ class GrayscaleKernel extends Kernel{
         int g = (argb >> 8) & 0xFF;
         int b = argb & 0xFF;
 
-        int gray = (int)(0.299 * r + 0.587 * g + 1.114 * b);
+        int gray = (int)(0.299 * r + 0.587 * g + 0.114 * b);
 
         dst[i] = (a << 24) | (gray << 16) | (gray << 8) | gray;
     }
