@@ -25,6 +25,15 @@ void main() throws IOException {
 
     editor2.applyFilter(CustomFilterIndex.CUSTOM_FILTER_1);
     editor2.export("jpg", "output5.jpg");
+
+    editor2.applyFilter(FilterPresets.INVERT);
+    editor2.export("jpg", "output6.jpg");
+
+    editor2.applyFilter(FilterPresets.PIXELBLUR);
+    editor2.export("jpg", "output7.jpg");
+
+    editor2.applyFilter(FilterPresets.SEPIA);
+    editor2.export("jpg", "output8.jpg");
 }
 
 
