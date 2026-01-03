@@ -7,24 +7,37 @@ import ImageEditor.Filters.FilterStrategy;
 import ImageEditor.OperationTags.FilterPresets;
 import ImageEditor.Filters.Implem.*;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Utils {
 
-    //może dodaj dynamiczne skalowanie w zależności od wymiarów obrazu
-//    static public BufferedImage scaleDown(BufferedImage image, int value) {
-//        //TODO or use from std lib if too hard
-//        return
-//    }
+    static public BufferedImage scaleImage(BufferedImage image, int scale){
+        assert(scale > 0 && scale <=100);
+
+        int newW = Math.max((int)(image.getWidth() * scale / 100f), 1);
+        int newH = Math.max((int)(image.getHeight() * scale / 100f), 1);
+
+        BufferedImage scaled = new BufferedImage(
+                newW, newH, image.getType()
+        );
+
+        Graphics2D g2 = scaled.createGraphics();
+        g2.setRenderingHint(
+                RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR
+        );
+        g2.drawImage(image, 0, 0, newW, newH, null);
+        g2.dispose();
+
+        return scaled;
+
+
+    }
 
     static public BufferedImage deepCopyImage(BufferedImage image) {
-        // TODO: Sprawdzic czy nie da sie optymalniej zrobic kopii
         BufferedImage copy = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-        for (int x=0; x<image.getWidth(); x++) {
-            for (int y=0; y<image.getHeight(); y++) {
-                copy.setRGB(x, y, image.getRGB(x, y));
-            }
-        }
+        copy.setData(image.getData());
 
         return copy;
     }

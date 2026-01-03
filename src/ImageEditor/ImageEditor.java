@@ -1,5 +1,6 @@
 package ImageEditor;
 
+import ImageEditor.Core.Utils;
 import ImageEditor.Filters.CustomFilters.CustomFilterManager;
 import ImageEditor.OperationTags.AdjustmentType;
 import ImageEditor.Core.HistoryManager;
@@ -60,19 +61,36 @@ public class ImageEditor {
         history.undo();
     }
 
+    public boolean isUndoable(){
+        return history.isUndoable();
+    }
+
     public void redo(){
         history.redo();
+    }
+
+    public boolean isRedoable(){
+        return history.isRedoable();
     }
 
     public void changeCustomFilter(CustomFilterIndex index){
         customFilterManager.changeFilter(state, index);
     }
 
+    public boolean isCustomFilterEmpty(CustomFilterIndex index){
+        return customFilterManager.getCustomFilters().get(index) == null;
+    }
+
+    public void exportPreview(int scale) throws IOException {
+        io.exportImage(imageRenderer.renderPreview(state, scale));
+    }
+    public void export(String fileFormat, String filename, int scale)throws IOException{
+        io.exportImage(imageRenderer.renderPreview(state, scale), fileFormat, filename);
+    }
 
     public void export()throws IOException{
         io.exportImage(imageRenderer.render(state));
     }
-
     public void export(String fileFormat, String filename)throws IOException{
         io.exportImage(imageRenderer.render(state), fileFormat, filename);
     }

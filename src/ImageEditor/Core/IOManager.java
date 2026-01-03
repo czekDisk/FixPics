@@ -32,7 +32,8 @@ public class IOManager {
     }
 
     public void exportImage(BufferedImage image) throws IOException {
-        ImageIO.write(image, this.fileFormat, file);
+        File output = new File("newImage." + this.fileFormat);
+        ImageIO.write(image, this.fileFormat, output);
     }
 
     public void exportImage(BufferedImage image, String format, String path) throws IOException {

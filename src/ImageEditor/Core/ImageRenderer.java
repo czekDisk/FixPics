@@ -16,7 +16,7 @@ import java.util.EnumMap;
 
 public class ImageRenderer {
     private BufferedImage imageOriginal;
-    private BufferedImage imagePreview;
+
 
     private final EnumMap<FilterPresets, FilterStrategy> filterStrategies;
     private final EnumMap<AdjustmentType, AdjustmentStrategy> adjustmentStrategies;
@@ -25,7 +25,6 @@ public class ImageRenderer {
     public ImageRenderer(BufferedImage imageOriginal, CustomFilterManager manager){
         this. customFilters = manager.getCustomFilters();
         this.imageOriginal = imageOriginal;
-        imagePreview = null;
 
         adjustmentStrategies = new EnumMap<>(AdjustmentType.class);
         for(AdjustmentType type : AdjustmentType.values())
@@ -47,7 +46,7 @@ public class ImageRenderer {
 
 
     public BufferedImage renderPreview(ImageState imageState, int scale){
-        BufferedImage copiedImage = Utils.deepCopyImage(imagePreview);  // nie zmieniamy oryginalu
+        BufferedImage copiedImage = Utils.scaleImage(Utils.deepCopyImage(imageOriginal), scale);  // nie zmieniamy oryginalu
 
         for (AdjustmentType type : AdjustmentType.values()) {
             adjustmentStrategies.get(type).applyAdjustment(copiedImage, imageState.getAdjustmentState().get(type));
