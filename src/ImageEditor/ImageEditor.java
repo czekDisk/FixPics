@@ -84,7 +84,7 @@ public class ImageEditor {
     public void exportPreview(int scale) throws IOException {
         io.exportImage(imageRenderer.renderPreview(state, scale));
     }
-    public void export(String fileFormat, String filename, int scale)throws IOException{
+    public void exportPreview(String fileFormat, String filename, int scale)throws IOException{
         io.exportImage(imageRenderer.renderPreview(state, scale), fileFormat, filename);
     }
 
