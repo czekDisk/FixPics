@@ -8,7 +8,6 @@ import ImageEditor.Filters.FilterStrategy;
 import ImageEditor.OperationTags.CustomFilterIndex;
 import ImageEditor.OperationTags.FilterPresets;
 import ImageEditor.ImageState;
-import ImageEditor.OperationTags.OperationType;
 
 import java.awt.image.BufferedImage;
 import java.util.EnumMap;
@@ -16,7 +15,6 @@ import java.util.EnumMap;
 
 public class ImageRenderer {
     private BufferedImage imageOriginal;
-
 
     private final EnumMap<FilterPresets, FilterStrategy> filterStrategies;
     private final EnumMap<AdjustmentType, AdjustmentStrategy> adjustmentStrategies;
@@ -34,16 +32,6 @@ public class ImageRenderer {
         for(FilterPresets type : FilterPresets.values())
             filterStrategies.put(type, Utils.filter_factory(type));
     }
-
-
-
-
-
-
-
-
-
-
 
     public BufferedImage renderPreview(ImageState imageState, int scale){
         BufferedImage copiedImage = Utils.scaleImage(Utils.deepCopyImage(imageOriginal), scale);  // nie zmieniamy oryginalu

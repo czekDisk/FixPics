@@ -16,7 +16,7 @@ public class GrayscaleFilter extends FilterStrategy {
         int height = image.getHeight();
 
         for (int y=0; y<height; y++) {
-            for (int x=0;  x<width; x++) {
+            for (int x=0; x<width; x++) {
                 int argb = image.getRGB(x,y);
 
                 int a = (argb >> 24) & 0xFF;

@@ -1,16 +1,9 @@
 package ImageEditor.Core;
 
 import ImageEditor.ImageState;
-import ImageEditor.OperationTags.OperationType;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.nio.Buffer;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.Stack;
-
 
 
 public class HistoryManager {
@@ -51,8 +44,6 @@ public class HistoryManager {
         }
 
     }
-
-
 
     public void redo(){
         if (!isRedoable()) return;

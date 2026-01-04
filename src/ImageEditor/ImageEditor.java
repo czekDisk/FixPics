@@ -1,6 +1,5 @@
 package ImageEditor;
 
-import ImageEditor.Core.Utils;
 import ImageEditor.Filters.CustomFilters.CustomFilterManager;
 import ImageEditor.OperationTags.AdjustmentType;
 import ImageEditor.Core.HistoryManager;
@@ -88,10 +87,10 @@ public class ImageEditor {
         io.exportImage(imageRenderer.renderPreview(state, scale), fileFormat, filename);
     }
 
-    public void export()throws IOException{
+    public void export() throws IOException{
         io.exportImage(imageRenderer.render(state));
     }
-    public void export(String fileFormat, String filename)throws IOException{
+    public void export(String fileFormat, String filename) throws IOException{
         io.exportImage(imageRenderer.render(state), fileFormat, filename);
     }
 

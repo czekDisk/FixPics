@@ -39,36 +39,30 @@ public class SharpnessAdjustment extends AdjustmentStrategy {
                 int a = (center >>> 24) & 0xFF;
                 int r = 0, g = 0, b = 0;
 
-                // Środek
                 r += 5 * ((center >>> 16) & 0xFF);
                 g += 5 * ((center >>> 8)  & 0xFF);
-                b +=      (center         & 0xFF);
+                b += 5 *  (center         & 0xFF);
 
-                // współrzędne mirror
                 int xL = mirror(x - 1, width);
                 int xR = mirror(x + 1, width);
                 int yU = mirror(y - 1, height);
                 int yD = mirror(y + 1, height);
 
-                // góra
                 int p = copy.getRGB(x, yU);
                 r -= (p >>> 16) & 0xFF;
                 g -= (p >>> 8) & 0xFF;
                 b -= p & 0xFF;
 
-                // dół
                 p = copy.getRGB(x, yD);
                 r -= (p >>> 16) & 0xFF;
                 g -= (p >>> 8) & 0xFF;
                 b -= p & 0xFF;
 
-                // lewo
                 p = copy.getRGB(xL, y);
                 r -= (p >>> 16) & 0xFF;
                 g -= (p >>> 8) & 0xFF;
                 b -= p & 0xFF;
 
-                // prawo
                 p = copy.getRGB(xR, y);
                 r -= (p >>> 16) & 0xFF;
                 g -= (p >>> 8) & 0xFF;
@@ -82,7 +76,6 @@ public class SharpnessAdjustment extends AdjustmentStrategy {
                 int inG = (center >>> 8) & 0xFF;
                 int inB = center & 0xFF;
 
-                // skalowanie wg value
                 r = inR + (r - inR) * value / 100;
                 g = inG + (g - inG) * value / 100;
                 b = inB + (b - inB) * value / 100;
