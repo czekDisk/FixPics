@@ -11,6 +11,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Utils {
+    final public static int MAX_COLOR_VAL = 255;
+    final public static int MID_COLOR_VAL = 128;
+    final public static int MIN_COLOR_VAL = 0;
 
     static public BufferedImage scaleImage(BufferedImage image, int scale){
         assert(scale > 0 && scale <=100);
@@ -68,6 +71,19 @@ public class Utils {
         };
     }
 
+    public static int clamp(int v) {
+        if (v < MIN_COLOR_VAL) return MIN_COLOR_VAL;
+        if (v > MAX_COLOR_VAL) return MAX_COLOR_VAL;
+        return v;
+    }
 
+    public static int mirror(int x, int max) {
+        if (x < 0) return -x - 1;
+        if (x >= max) return 2 * max - x - 1;
+        return x;
+    }
 
+    public static double calc_luminance(int r, int g, int b) {
+        return 0.299 * r + 0.587 * g + 0.114 * b;
+    }
 }

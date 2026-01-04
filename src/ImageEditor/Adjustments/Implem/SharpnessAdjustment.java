@@ -6,20 +6,6 @@ import ImageEditor.Core.Utils;
 import java.awt.image.BufferedImage;
 
 public class SharpnessAdjustment extends AdjustmentStrategy {
-    //integer zmiany przyjmuje wartości od 0 do 100 jako procent zmiany
-    //dodaj więc skalowanie w sumacyjnych funkcjach
-
-    private int clamp(int v) {
-        if (v < 0) return 0;
-        if (v > 255) return 255;
-        return v;
-    }
-
-    private int mirror(int x, int max) {
-        if (x < 0) return -x - 1;
-        if (x >= max) return 2 * max - x - 1;
-        return x;
-    }
 
     /**
      * funkcja aplikuje korektę na image o poziomie value
@@ -27,6 +13,9 @@ public class SharpnessAdjustment extends AdjustmentStrategy {
      * @param value 0 - 100%
      */
     public void applyAdjustment(BufferedImage image, int value) {
+        if (value == 0)
+            return;
+
         int width = image.getWidth();
         int height = image.getHeight();
 
@@ -41,12 +30,12 @@ public class SharpnessAdjustment extends AdjustmentStrategy {
 
                 r += 5 * ((center >>> 16) & 0xFF);
                 g += 5 * ((center >>> 8)  & 0xFF);
-                b += 5 *  (center         & 0xFF);
+                b += 5 * ((center)        & 0xFF);
 
-                int xL = mirror(x - 1, width);
-                int xR = mirror(x + 1, width);
-                int yU = mirror(y - 1, height);
-                int yD = mirror(y + 1, height);
+                int xL = Utils.mirror(x - 1, width);
+                int xR = Utils.mirror(x + 1, width);
+                int yU = Utils.mirror(y - 1, height);
+                int yD = Utils.mirror(y + 1, height);
 
                 int p = copy.getRGB(x, yU);
                 r -= (p >>> 16) & 0xFF;
@@ -68,9 +57,9 @@ public class SharpnessAdjustment extends AdjustmentStrategy {
                 g -= (p >>> 8) & 0xFF;
                 b -= p & 0xFF;
 
-                r = clamp(r);
-                g = clamp(g);
-                b = clamp(b);
+                r = Utils.clamp(r);
+                g = Utils.clamp(g);
+                b = Utils.clamp(b);
 
                 int inR = (center >>> 16) & 0xFF;
                 int inG = (center >>> 8) & 0xFF;
@@ -80,9 +69,9 @@ public class SharpnessAdjustment extends AdjustmentStrategy {
                 g = inG + (g - inG) * value / 100;
                 b = inB + (b - inB) * value / 100;
 
-                r = clamp(r);
-                g = clamp(g);
-                b = clamp(b);
+                r = Utils.clamp(r);
+                g = Utils.clamp(g);
+                b = Utils.clamp(b);
 
                 int out = (a << 24) | (r << 16) | (g << 8) | b;
                 image.setRGB(x, y, out);

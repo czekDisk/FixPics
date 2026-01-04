@@ -2,6 +2,7 @@ package ImageEditor.Filters.Implem;
 
 import ImageEditor.Filters.FilterStrategy;
 import java.awt.image.BufferedImage;
+import ImageEditor.Core.Utils;
 
 
 public class GrayscaleFilter extends FilterStrategy {
@@ -24,7 +25,7 @@ public class GrayscaleFilter extends FilterStrategy {
                 int g = (argb >> 8) & 0xFF;
                 int b = argb & 0xFF;
 
-                int gray = (int)(0.299 * r + 0.587 * g + 0.114 * b);
+                int gray = (int)(Utils.calc_luminance(r, g, b));
                 int out = (a << 24) | (gray << 16) | (gray << 8) | gray;
 
                 image.setRGB(x, y, out);
