@@ -52,7 +52,9 @@ public class ImageRenderer {
             adjustmentStrategies.get(type).applyAdjustment(copiedImage, imageState.getAdjustmentState().get(type));
         }
 
-        filterStrategies.get(imageState.getFilter()).applyFilter(copiedImage);
+        if (imageState.getFilter() != FilterPresets.NOFILTER) {
+            filterStrategies.get(imageState.getFilter()).applyFilter(copiedImage);
+        }
 
         return copiedImage;
     }

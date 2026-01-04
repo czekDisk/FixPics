@@ -12,51 +12,22 @@ public class PixelBlurFilter extends FilterStrategy {
      * @param image obraz
      */
     public void applyFilter(BufferedImage image) {
+        int BLOCK_SIZE = 5;  // TODO: PixelBlur ma roznej wielkosci bloki, a nie ma jak przekazac tego przekazac
         int width = image.getWidth();
         int height = image.getHeight();
-        int[] pixels = image.getRGB(0, 0, width, height, null, 0, width);
 
-        PixelBlurKernel kernel = new PixelBlurKernel(pixels, pixels, height, width);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                // Jeden piksel nadpisuje caly blok, znajdujemy piksel calego bloku i go ustawiamy
 
-        Range range = Range.create(width * height);
-        kernel.execute(range);
+                int blockRow = (y / BLOCK_SIZE) * BLOCK_SIZE;
+                int blockCol = (x / BLOCK_SIZE) * BLOCK_SIZE;
 
-        image.setRGB(0, 0, width, height, pixels, 0, width);
+                int pixel = image.getRGB(blockCol, blockRow);
 
-        kernel.dispose();
+                image.setRGB(x, y, pixel);
+            }
+        }
     }
 }
 
-
-class PixelBlurKernel extends Kernel {
-    private int [] src;
-    private int [] dst;
-    private int height;
-    private int width;
-    private int BLOCK_SIZE;  // TODO: PixelBlur ma roznej wielkosci bloki, a nie ma jak przekazac tego przekazac
-
-    public PixelBlurKernel(int [] src, int [] dst, int height, int width){
-        this.src = src;
-        this.dst = dst;
-        this.height = height;
-        this.width = width;
-        this.BLOCK_SIZE = 5;  // 10px
-    }
-
-    @Override
-    public void run(){
-        int i = getGlobalId();
-
-        // Jeden piksel nadpisuje caly blok, znajdujemy piksel calego bloku i go ustawiamy
-
-        int pixelRow = i / width;
-        int pixelCol = i % width;
-
-        int blockRow = (pixelRow / BLOCK_SIZE) * BLOCK_SIZE;
-        int blockCol = (pixelCol / BLOCK_SIZE) * BLOCK_SIZE;
-
-        int blockIdx = blockRow*width + blockCol;
-
-        dst[i] = src[blockIdx];
-    }
-}
