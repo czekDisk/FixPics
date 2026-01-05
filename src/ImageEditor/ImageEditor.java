@@ -94,5 +94,11 @@ public class ImageEditor {
         io.exportImage(imageRenderer.render(state), fileFormat, filename);
     }
 
+    
+    public BufferedImage getPreview(int scale){
+        return imageRenderer.renderPreview(state, scale);
+    }
+
+
 
 }
