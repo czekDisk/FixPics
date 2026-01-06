@@ -1,18 +1,14 @@
 import ImageEditor.ImageEditor;
 import ImageEditor.OperationTags.AdjustmentType;
-import ImageEditor.OperationTags.CustomFilterIndex;
-import ImageEditor.OperationTags.FilterPresets;
+import EditorUi.EditorGui;
+import javax.swing.*;
+import java.io.IOException;
 
-void main() throws IOException {
-    long startTime = System.currentTimeMillis();
+public class Main {
 
-    ImageEditor editor = new ImageEditor("pobierz.jpg");
-    editor.applyAdjustment(AdjustmentType.TEMPERATURE, 100);
-    editor.export("jpg", "export.jpg");
-
-    long endTime = System.currentTimeMillis();
-
-    System.out.println((endTime - startTime)/1000f + "s");
+    public static void main(String[] args) throws IOException {
+        SwingUtilities.invokeLater(() -> {
+            new EditorGui();
+        });
+    }
 }
-
-

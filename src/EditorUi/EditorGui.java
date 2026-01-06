@@ -23,12 +23,22 @@ public class EditorGui extends JFrame {
     private int renderScale = 50;
     private SwingWorker<BufferedImage, Void> currentWorker;
 
+    private JPanel mainPanel;
+    private JPanel toolbar;
+    private JPanel left;
+    private JPanel slidersPanel;
+    private JLabel filterLabel;
+    private JToggleButton darkToggle;
+    private boolean darkTheme = false;
+
     public EditorGui() {
         sliders = new EnumMap<>(AdjustmentType.class);
         imageLabel = new JLabel("No image loaded", SwingConstants.CENTER);
         filterBox = new JComboBox<>(FilterPresets.values());
-        undoBtn = new JButton("Undo");
-        redoBtn = new JButton("Redo");
+        filterBox.setBackground(Color.WHITE);
+        filterBox.setForeground(Color.BLACK);
+        undoBtn = new RoundedButton("Undo");
+        redoBtn = new RoundedButton("Redo");
         initUI();
     }
 
@@ -38,34 +48,41 @@ public class EditorGui extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(imageLabel, BorderLayout.CENTER);
 
-        JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton openBtn = new JButton("Open");
-        JButton exportBtn = new JButton("Export");
+        toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
+        RoundedButton openBtn = new RoundedButton("Open");
+        RoundedButton exportBtn = new RoundedButton("Export");
 
         openBtn.addActionListener(e -> openFile());
         exportBtn.addActionListener(e -> exportFile());
 
-
+        styleToolbarButton(openBtn);
+        styleToolbarButton(exportBtn);
+        styleToolbarButton(undoBtn);
+        styleToolbarButton(redoBtn);
 
         toolbar.add(openBtn);
         toolbar.add(exportBtn);
+        toolbar.add(undoBtn);
+        toolbar.add(redoBtn);
+        darkToggle = new RoundedToggleButton("Dark");
+        darkToggle.setFocusPainted(false);
+        styleToolbarButton(darkToggle);
+        darkToggle.addActionListener(e -> applyTheme(darkToggle.isSelected()));
+        toolbar.add(Box.createHorizontalStrut(8));
+        toolbar.add(darkToggle);
 
 
         JPanel top = new JPanel(new BorderLayout());
         top.add(toolbar, BorderLayout.CENTER);
 
 
-        JPanel left = new JPanel(new BorderLayout());
-        JPanel leftTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        leftTop.add(undoBtn);
-        leftTop.add(redoBtn);
-        left.add(leftTop, BorderLayout.NORTH);
+        left = new JPanel(new BorderLayout());
 
 
-        JPanel slidersPanel = new JPanel();
+        slidersPanel = new JPanel();
         slidersPanel.setLayout(new BoxLayout(slidersPanel, BoxLayout.Y_AXIS));
 
         int LABEL_WIDTH = 120;
@@ -74,7 +91,9 @@ public class EditorGui extends JFrame {
             JPanel p = new JPanel(new BorderLayout());
             JLabel l = new JLabel(type.name());
             l.setPreferredSize(new Dimension(LABEL_WIDTH, l.getPreferredSize().height));
+            l.setForeground(Color.BLACK);
             JSlider s = new JSlider(-100, 100, 0);
+            s.setUI(new CustomSliderUI(s));
             s.setPaintTicks(true);
             s.setPaintLabels(true);
             s.setPreferredSize(new Dimension(SLIDER_WIDTH, s.getPreferredSize().height));
@@ -88,7 +107,8 @@ public class EditorGui extends JFrame {
 
 
         JPanel filterPanel = new JPanel(new BorderLayout());
-        filterPanel.add(new JLabel("Filter:"), BorderLayout.WEST);
+        filterLabel = new JLabel("Filter:");
+        filterPanel.add(filterLabel, BorderLayout.WEST);
         filterPanel.add(filterBox, BorderLayout.CENTER);
 
         JPanel leftCenter = new JPanel(new BorderLayout());
@@ -114,6 +134,7 @@ public class EditorGui extends JFrame {
 
 
         setControlsEnabled(false);
+        applyTheme(darkTheme);
         setVisible(true);
     }
 
@@ -122,6 +143,61 @@ public class EditorGui extends JFrame {
         redoBtn.setEnabled(enabled);
         filterBox.setEnabled(enabled);
         for (JSlider s : sliders.values()) s.setEnabled(enabled);
+    }
+
+    private void styleToolbarButton(AbstractButton b) {
+        Color bg = darkTheme ? Color.BLACK : Color.WHITE;
+        Color fg = darkTheme ? Color.WHITE : Color.BLACK;
+        b.setBackground(bg);
+        b.setForeground(fg);
+        b.setFocusPainted(false);
+        b.setContentAreaFilled(false);
+        b.setOpaque(false);
+        b.setPreferredSize(new Dimension(100, 28));
+    }
+
+    private void applyTheme(boolean dark) {
+        darkTheme = dark;
+        Color bg = darkTheme ? Color.BLACK : Color.WHITE;
+        Color fg = darkTheme ? Color.WHITE : Color.BLACK;
+        getContentPane().setBackground(bg);
+        if (mainPanel != null) mainPanel.setBackground(bg);
+        imageLabel.setOpaque(true);
+        imageLabel.setBackground(bg);
+        imageLabel.setForeground(fg);
+        if (toolbar != null) toolbar.setBackground(bg);
+        if (left != null) left.setBackground(bg);
+        if (slidersPanel != null) slidersPanel.setBackground(bg);
+        if (filterLabel != null) filterLabel.setForeground(fg);
+        if (filterBox != null) { filterBox.setBackground(bg); filterBox.setForeground(fg); }
+        if (toolbar != null) {
+            for (Component c : toolbar.getComponents()) {
+                if (c instanceof AbstractButton) styleToolbarButton((AbstractButton) c);
+            }
+        }
+       
+        styleToolbarButton(undoBtn);
+        styleToolbarButton(redoBtn);
+        
+        if (slidersPanel != null) {
+            for (Component comp : slidersPanel.getComponents()) {
+                if (comp instanceof JPanel) {
+                    JPanel p = (JPanel) comp;
+                    if (p.getComponentCount() > 0 && p.getComponent(0) instanceof JLabel) {
+                        JLabel lab = (JLabel) p.getComponent(0);
+                        
+                        lab.setForeground(Color.BLACK);
+                        lab.setBackground(bg);
+                    }
+                }
+            }
+        }
+        for (JSlider s : sliders.values()) {
+            s.setBackground(bg);
+            s.setForeground(fg);
+            s.repaint();
+        }
+        CustomSliderUI.setColors(fg, fg);
     }
 
     private void openFile() {
@@ -139,9 +215,9 @@ public class EditorGui extends JFrame {
         }
     }
 
-    private void scheduleRender() { // funkcja do renderowania obrazu na osobnym wątku
+    private void scheduleRender() {
 
-        if (currentWorker != null && !currentWorker.isDone()) { //musimy sprawdzic czy nie jest w trakcie innego zadania, dzieki temu nie bedzie renderów na raz
+        if (currentWorker != null && !currentWorker.isDone()) {
             currentWorker.cancel(true);
         }
 
@@ -188,7 +264,7 @@ public class EditorGui extends JFrame {
         scheduleRender();
     }
 
-    private class AdjustmentChangeListener implements ChangeListener { //klasa pomocnicza do nasłuchiwania zmian suwaka
+    private class AdjustmentChangeListener implements ChangeListener {
         private AdjustmentType type;
 
         AdjustmentChangeListener(AdjustmentType type) { this.type = type; }
@@ -235,7 +311,7 @@ public class EditorGui extends JFrame {
         String Path = path;
         String Format = format;
 
-        new SwingWorker<Void, Void>() { // tutaj tworzymy workera na biezaca bo export to jednorazowa akcja
+        new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
                 editor.exportPreview(Format, Path, 100);
