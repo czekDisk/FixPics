@@ -99,6 +99,11 @@ public class ImageEditor {
         return imageRenderer.renderPreview(state, scale);
     }
 
+    // Return a copy of the current state so callers can inspect it without mutating internal state
+    public ImageState getState(){
+        return new ImageState(state);
+    }
+
 
 
 }
