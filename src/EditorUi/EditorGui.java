@@ -1,6 +1,7 @@
 package EditorUi;
 
 import ImageEditor.ImageEditor;
+import ImageEditor.ImageState;
 import ImageEditor.OperationTags.AdjustmentType;
 import ImageEditor.OperationTags.FilterPresets;
 import javax.swing.*;
@@ -209,6 +210,7 @@ public class EditorGui extends JFrame {
                 editor = new ImageEditor(path);
                 scheduleRender();
                 setControlsEnabled(true);
+                refreshControls();
             } catch (IOException | IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this, "Cannot open image: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -244,24 +246,59 @@ public class EditorGui extends JFrame {
         currentWorker.execute();
     }
 
+    // Flag used to avoid reacting to programmatic control updates
+    private boolean programmaticUpdate = false;
+
     private void doUndo() {
         if (editor == null) return;
         editor.undo();
         scheduleRender();
+        refreshControls();
     }
 
     private void doRedo() {
         if (editor == null) return;
         editor.redo();
         scheduleRender();
+        refreshControls();
     }
 
     private void applySelectedFilter() {
+        if (programmaticUpdate) return; // ignore programmatic selections
         if (editor == null) return;
         FilterPresets preset = (FilterPresets) filterBox.getSelectedItem();
         if (preset == null) return;
         editor.applyFilter(preset);
         scheduleRender();
+        refreshControls();
+    }
+
+    // Sync UI controls with editor state (doesn't trigger change listeners)
+    private void refreshControls(){
+        if (editor == null) return;
+        // Update undo/redo availability
+        undoBtn.setEnabled(editor.isUndoable());
+        redoBtn.setEnabled(editor.isRedoable());
+
+        programmaticUpdate = true;
+        // Update sliders
+        ImageState state = editor.getState();
+        for (AdjustmentType type : AdjustmentType.values()){
+            JSlider s = sliders.get(type);
+            if (s != null){
+                Integer val = state.getAdjustmentState().get(type);
+                if (val != null) s.setValue(val);
+            }
+        }
+
+        // Update filter combobox; if non-preset filter is active, show NOFILTER
+        if (state.getFilter() instanceof FilterPresets){
+            filterBox.setSelectedItem((FilterPresets) state.getFilter());
+        } else {
+            filterBox.setSelectedItem(FilterPresets.NOFILTER);
+        }
+
+        programmaticUpdate = false;
     }
 
     private class AdjustmentChangeListener implements ChangeListener {
@@ -271,12 +308,14 @@ public class EditorGui extends JFrame {
 
         @Override
         public void stateChanged(ChangeEvent e) {
+            if (programmaticUpdate) return; // ignore when controls are being updated from state
             if (editor == null) return;
             JSlider s = (JSlider) e.getSource();
             if (!s.getValueIsAdjusting()) {
                 int val = s.getValue();
                 editor.applyAdjustment(type, val);
                 scheduleRender();
+                refreshControls();
             }
         }
     }
