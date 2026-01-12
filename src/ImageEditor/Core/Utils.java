@@ -55,6 +55,7 @@ public class Utils {
             case NOISE -> new NoiseFilter();
             case PIXELBLUR -> new PixelBlurFilter();
             case SEPIA -> new SepiaFilter();
+            case SEGMENTATION -> new SegmentationFilter();
         };
     }
 
