@@ -1,5 +1,6 @@
 package ImageEditor.Filters.Implem;
 
+import ImageEditor.Core.Utils;
 import ImageEditor.Filters.FilterStrategy;
 
 import java.awt.image.BufferedImage;
@@ -16,16 +17,16 @@ public class BlurFilter extends FilterStrategy{
         int h = image.getHeight();
         BufferedImage t = new BufferedImage(w, h, image.getType());
 
-        int k = 3;
+        int k = 7;
         int hk = k / 2;
 
-        for (int y = hk; y < h - hk; y++) {
-            for (int x = hk; x < w - hk; x++) {
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
                 int r = 0, g = 0, b = 0, c = 0;
 
                 for (int dy = -hk; dy <= hk; dy++) {
                     for (int dx = -hk; dx <= hk; dx++) {
-                        int p = image.getRGB(x + dx, y + dy);
+                        int p = image.getRGB(Utils.mirror(x + dx, w), Utils.mirror(y + dy, h));
                         r += (p >> 16) & 0xFF;
                         g += (p >> 8) & 0xFF;
                         b += p & 0xFF;
@@ -43,8 +44,8 @@ public class BlurFilter extends FilterStrategy{
             }
         }
 
-        for (int y = hk; y < h - hk; y++) {
-            for (int x = hk; x < w - hk; x++) {
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
                 image.setRGB(x, y, t.getRGB(x, y));
             }
         }

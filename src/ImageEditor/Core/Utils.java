@@ -4,8 +4,8 @@ import ImageEditor.Adjustments.AdjustmentStrategy;
 import ImageEditor.OperationTags.AdjustmentType;
 import ImageEditor.Adjustments.Implem.*;
 import ImageEditor.Filters.FilterStrategy;
-import ImageEditor.OperationTags.FilterPresets;
 import ImageEditor.Filters.Implem.*;
+import ImageEditor.OperationTags.FilterType;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -46,7 +46,7 @@ public class Utils {
     }
 
 
-    static public FilterStrategy filter_factory(FilterPresets type){
+    static public FilterStrategy filter_factory(FilterType type){
         return switch (type) {
             case NOFILTER -> null;//?
             case BLUR -> new BlurFilter();

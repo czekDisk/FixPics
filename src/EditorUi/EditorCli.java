@@ -1,7 +1,7 @@
 package EditorUi;
 
 import ImageEditor.OperationTags.AdjustmentType;
-import ImageEditor.OperationTags.FilterPresets;
+import ImageEditor.OperationTags.FilterType;
 import ImageEditor.ImageEditor;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class EditorCli {
     private void filtersMenu() {
         if (!checkImageLoaded()) return;
 
-        FilterPresets[] filters = FilterPresets.values();
+        FilterType[] filters = FilterType.values();
         System.out.println("\n Filters ");
 
         for (int i = 0; i < filters.length; i++) {
@@ -77,7 +77,7 @@ public class EditorCli {
             return;
         }
 
-        FilterPresets selected = filters[choice];
+        FilterType selected = filters[choice];
         editor.applyFilter(selected);
         System.out.println(selected + " applied.");
     }

@@ -1,1 +1,28 @@
-{"CUSTOM_FILTER_1":{"presets":{"BRIGHTNESS":0,"CONTRAST":0,"EXPOSURE":0,"HUE":0,"ILLUMINATION":0,"SATURATION":0,"SHARPNESS":90,"TEMPERATURE":0}},"CUSTOM_FILTER_2":{"presets":{"BRIGHTNESS":0,"CONTRAST":0,"EXPOSURE":0,"HUE":0,"ILLUMINATION":0,"SATURATION":0,"SHARPNESS":90,"TEMPERATURE":0}}}
+{
+  "contr" : {
+    "adjustmentState" : {
+      "BRIGHTNESS" : 0,
+      "CONTRAST" : -100,
+      "EXPOSURE" : 0,
+      "HUE" : 100,
+      "ILLUMINATION" : 0,
+      "SATURATION" : 0,
+      "SHARPNESS" : 0,
+      "TEMPERATURE" : 0
+    },
+    "filter" : "BLUR"
+  },
+  "BlurHue" : {
+    "adjustmentState" : {
+      "BRIGHTNESS" : 0,
+      "CONTRAST" : 0,
+      "EXPOSURE" : 0,
+      "HUE" : 100,
+      "ILLUMINATION" : 0,
+      "SATURATION" : 0,
+      "SHARPNESS" : 0,
+      "TEMPERATURE" : 0
+    },
+    "filter" : "BLUR"
+  }
+}

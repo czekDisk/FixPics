@@ -23,7 +23,7 @@ public class BrightnessAdjustment extends AdjustmentStrategy {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        double scale = (value/100f);
+        double scale = (value/200f);
 
         for (int y=0; y<height; y++) {
             for (int x=0; x<width; x++) {
@@ -34,9 +34,9 @@ public class BrightnessAdjustment extends AdjustmentStrategy {
                 int g = (argb >> 8) & 0xFF;
                 int b = argb & 0xFF;
 
-                r += (int)(scale*Utils.MAX_COLOR_VAL);
-                g += (int)(scale*Utils.MAX_COLOR_VAL);
-                b += (int)(scale*Utils.MAX_COLOR_VAL);
+                r += value;
+                g += value;
+                b += value;
 
                 r = Utils.clamp(r);
                 g = Utils.clamp(g);

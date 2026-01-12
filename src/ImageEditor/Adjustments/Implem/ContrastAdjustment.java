@@ -23,7 +23,7 @@ public class ContrastAdjustment extends AdjustmentStrategy {
         int height = image.getHeight();
 
         // ten wzor dziala dla value w zakresie [-255, 255], dlatego newValue [-100, 100]*2.55
-        double newValue = value*2.55;
+        double newValue = value;
         double factor = 259.0*(newValue + 255)/(255.0*(259 - newValue));
 
         for (int y = 0; y < height; y++) {

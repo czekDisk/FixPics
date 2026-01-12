@@ -1,7 +1,6 @@
 package ImageEditor;
 
 import ImageEditor.OperationTags.AdjustmentType;
-import ImageEditor.OperationTags.FilterPresets;
 import ImageEditor.OperationTags.FilterType;
 
 import java.util.EnumMap;
@@ -15,7 +14,7 @@ public class ImageState {
         for (AdjustmentType type : AdjustmentType.values())
             adjustmentState.put(type, 0);
 
-        filter = FilterPresets.NOFILTER;
+        filter = FilterType.NOFILTER;
     }
 
     public ImageState(ImageState other){
@@ -33,7 +32,7 @@ public class ImageState {
             adjustmentState.put(type, 0);
         }
 
-        filter = FilterPresets.NOFILTER;
+        filter = FilterType.NOFILTER;
     }
 
     public EnumMap<AdjustmentType, Integer> getAdjustmentState() {

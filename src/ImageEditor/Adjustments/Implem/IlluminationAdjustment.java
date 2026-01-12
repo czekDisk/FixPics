@@ -23,7 +23,7 @@ public class IlluminationAdjustment extends AdjustmentStrategy {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        double scale = (value/100f);
+        double scale = (value/300f);
 
         for (int y=0; y<height; y++) {
             for (int x=0; x<width; x++) {
@@ -35,6 +35,7 @@ public class IlluminationAdjustment extends AdjustmentStrategy {
                 int b = argb & 0xFF;
 
                 double gray = Utils.calc_luminance(r, g, b);
+//                double gray = 0.2126*r + 0.7152*g + 0.0722*b;
                 double shadowMask = 1f - gray/255.0;
 
                 shadowMask *= shadowMask;  // smoother mask
@@ -52,5 +53,24 @@ public class IlluminationAdjustment extends AdjustmentStrategy {
                 image.setRGB(x, y, out);
             }
         }
+    }
+
+    // zamiana 0-255 sRGB na 0.0-1.0 linear RGB
+    private static double srgbToLinear(int c) {
+        double v = c / 255.0;
+        if (v <= 0.04045)
+            return v / 12.92;
+        else
+            return Math.pow((v + 0.055) / 1.055, 2.4);
+    }
+
+    // zamiana 0.0-1.0 linear RGB na 0-255 sRGB
+    private static int linearToSrgb(double v) {
+        v = Math.max(0, Math.min(1, v)); // clamp
+        if (v <= 0.0031308)
+            v *= 12.92;
+        else
+            v = 1.055 * Math.pow(v, 1.0 / 2.4) - 0.055;
+        return (int)(v * 255 + 0.5);
     }
 }

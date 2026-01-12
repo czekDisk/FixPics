@@ -1,16 +1,17 @@
 package ImageEditor;
 
-import ImageEditor.Filters.CustomFilters.CustomFilterManager;
+import Exceptions.NonExistantPresetException;
+import Exceptions.PresetAlreadyExistsException;
+import ImageEditor.Core.PresetManager;
 import ImageEditor.OperationTags.AdjustmentType;
 import ImageEditor.Core.HistoryManager;
 import ImageEditor.Core.IOManager;
 import ImageEditor.Core.ImageRenderer;
-import ImageEditor.OperationTags.CustomFilterIndex;
-import ImageEditor.OperationTags.FilterPresets;
 import ImageEditor.OperationTags.FilterType;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Set;
 
 
 public class ImageEditor {
@@ -19,17 +20,17 @@ public class ImageEditor {
     private HistoryManager history;
     private IOManager io;
     private ImageRenderer imageRenderer;
-    private CustomFilterManager customFilterManager;
+    private PresetManager presetManager;
 
 
-    public ImageEditor(String filepath) throws IOException, IllegalArgumentException {
+    public ImageEditor(String filepath) throws IOException {
         this.io = new IOManager(filepath);
 
         this.originalImage = io.getImage();
         this.state = new  ImageState();
         this.history = new HistoryManager(state);
-        this.customFilterManager = new CustomFilterManager();
-        this.imageRenderer = new ImageRenderer(originalImage, customFilterManager);
+        this.presetManager = new PresetManager();
+        this.imageRenderer = new ImageRenderer(originalImage);
 
     }
 
@@ -38,22 +39,9 @@ public class ImageEditor {
         history.update();
     }
 
-    public int applyFilter(FilterType type){
-        if (type.getClass() == FilterPresets.class){
+    public void applyFilter(FilterType type){
             state.setFilter(type);
             history.update();
-            return 0;
-        }
-        else {
-            if (customFilterManager.getCustomFilters().get(type) == null){
-                return 1;
-            }
-            else{
-                state.setFilter(type);
-                history.update();
-                return 0;
-            }
-        }
     }
 
     public void undo(){
@@ -70,14 +58,6 @@ public class ImageEditor {
 
     public boolean isRedoable(){
         return history.isRedoable();
-    }
-
-    public void changeCustomFilter(CustomFilterIndex index){
-        customFilterManager.changeFilter(state, index);
-    }
-
-    public boolean isCustomFilterEmpty(CustomFilterIndex index){
-        return customFilterManager.getCustomFilters().get(index) == null;
     }
 
     public void exportPreview(int scale) throws IOException {
@@ -106,4 +86,46 @@ public class ImageEditor {
 
 
 
+
+
+    public void applyPreset(String presetName) throws NonExistantPresetException {
+        if (presetManager.getPreset(presetName) == null){
+            throw new NonExistantPresetException("there's no such preset");
+        }
+        state = presetManager.getPreset(presetName);
+        history.update();
+    }
+
+    public void savePreset(String presetName) throws PresetAlreadyExistsException {
+        presetManager.createPreset(presetName, state);
+    }
+
+    public void removePreset(String presetName){
+        presetManager.removePreset(presetName);
+    }
+
+    public Set<String> getPresetNames(){
+        return presetManager.getPresetNames();
+    }
+
+
+    public static void main(String []args) throws IOException, PresetAlreadyExistsException, NonExistantPresetException {
+        ImageEditor editor = new ImageEditor("image.jpg");
+
+        editor.applyFilter(FilterType.BLUR);
+        editor.applyAdjustment(AdjustmentType.HUE, 100);
+        editor.savePreset("BlurHue");
+        editor.export("png", "export.png");
+        editor.applyAdjustment(AdjustmentType.CONTRAST, -100);
+        editor.savePreset("contr");
+
+        ImageEditor editor2 = new ImageEditor("image.jpg");
+        editor2.applyPreset("BlurHue");
+        editor2.export("png", "export2.png");
+        editor2.applyPreset("contr");
+        editor2.export("png", "export3.png");
+    }
 }
+
+
+

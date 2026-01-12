@@ -22,7 +22,7 @@ public class HueAdjustment extends AdjustmentStrategy {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        float scale = (value/100f);
+        float scale = (value/200f);
 
         // Hue, Saturation, Brightness
         float [] hsb = new float[3];

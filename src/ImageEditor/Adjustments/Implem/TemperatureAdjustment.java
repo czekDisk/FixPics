@@ -19,7 +19,7 @@ public class TemperatureAdjustment extends AdjustmentStrategy {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        double scale = (value/100f);
+        double scale = (value/200f);
         int INTENSIVITY = (int)(Utils.MAX_COLOR_VAL*0.4);  // jak bardzo moze rozjasnic maksymalnie
 
         for (int y=0; y<height; y++) {

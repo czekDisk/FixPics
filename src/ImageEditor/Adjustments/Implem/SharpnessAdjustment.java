@@ -10,7 +10,7 @@ public class SharpnessAdjustment extends AdjustmentStrategy {
     /**
      * funkcja aplikuje korektę na image o poziomie value
      * @param image obraz
-     * @param value 0 - 100%
+     * @param value -100 - 100%
      */
     public void applyAdjustment(BufferedImage image, int value) {
         if (value == 0)

@@ -2,9 +2,6 @@ package ImageEditor.Filters.Implem;
 
 import ImageEditor.Filters.FilterStrategy;
 
-import com.aparapi.Kernel;
-
-import com.aparapi.Range;
 
 import java.awt.image.BufferedImage;
 

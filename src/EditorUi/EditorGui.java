@@ -3,7 +3,7 @@ package EditorUi;
 import ImageEditor.ImageEditor;
 import ImageEditor.ImageState;
 import ImageEditor.OperationTags.AdjustmentType;
-import ImageEditor.OperationTags.FilterPresets;
+import ImageEditor.OperationTags.FilterType;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -18,7 +18,7 @@ public class EditorGui extends JFrame {
     private ImageEditor editor;
     private JLabel imageLabel;
     private EnumMap<AdjustmentType, JSlider> sliders;
-    private JComboBox<FilterPresets> filterBox;
+    private JComboBox<FilterType> filterBox;
     private JButton undoBtn;
     private JButton redoBtn;
     private int renderScale = 50;
@@ -35,7 +35,7 @@ public class EditorGui extends JFrame {
     public EditorGui() {
         sliders = new EnumMap<>(AdjustmentType.class);
         imageLabel = new JLabel("No image loaded", SwingConstants.CENTER);
-        filterBox = new JComboBox<>(FilterPresets.values());
+        filterBox = new JComboBox<>(FilterType.values());
         filterBox.setBackground(Color.WHITE);
         filterBox.setForeground(Color.BLACK);
         undoBtn = new RoundedButton("Undo");
@@ -266,7 +266,7 @@ public class EditorGui extends JFrame {
     private void applySelectedFilter() {
         if (programmaticUpdate) return; // ignore programmatic selections
         if (editor == null) return;
-        FilterPresets preset = (FilterPresets) filterBox.getSelectedItem();
+        FilterType preset = (FilterType) filterBox.getSelectedItem();
         if (preset == null) return;
         editor.applyFilter(preset);
         scheduleRender();
@@ -292,10 +292,10 @@ public class EditorGui extends JFrame {
         }
 
         // Update filter combobox; if non-preset filter is active, show NOFILTER
-        if (state.getFilter() instanceof FilterPresets){
-            filterBox.setSelectedItem((FilterPresets) state.getFilter());
+        if (state.getFilter() instanceof FilterType){
+            filterBox.setSelectedItem((FilterType) state.getFilter());
         } else {
-            filterBox.setSelectedItem(FilterPresets.NOFILTER);
+            filterBox.setSelectedItem(FilterType.NOFILTER);
         }
 
         programmaticUpdate = false;

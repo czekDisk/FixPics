@@ -1,3 +1,11 @@
 package ImageEditor.OperationTags;
 
-public interface FilterType extends OperationType{}
+public enum FilterType implements OperationType {
+    NOFILTER,
+    BLUR,
+    GRAYSCALE,
+    INVERT,
+    NOISE,
+    PIXELBLUR,
+    SEPIA,
+}
