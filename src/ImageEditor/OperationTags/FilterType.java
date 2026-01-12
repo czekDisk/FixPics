@@ -8,4 +8,5 @@ public enum FilterType implements OperationType {
     NOISE,
     PIXELBLUR,
     SEPIA,
+    SEGMENTATION,
 }
