@@ -22,7 +22,6 @@ public class ImageEditor {
     private ImageRenderer imageRenderer;
     private PresetManager presetManager;
 
-
     public ImageEditor(String filepath) throws IOException {
         this.io = new IOManager(filepath);
 
@@ -89,7 +88,7 @@ public class ImageEditor {
 
 
     public void applyPreset(String presetName) throws NonExistantPresetException {
-        if (presetManager.getPreset(presetName) == null){
+        if (presetManager.containsPreset(presetName)){
             throw new NonExistantPresetException("there's no such preset");
         }
         state = presetManager.getPreset(presetName);
@@ -109,22 +108,6 @@ public class ImageEditor {
     }
 
 
-    public static void main(String []args) throws IOException, PresetAlreadyExistsException, NonExistantPresetException {
-        ImageEditor editor = new ImageEditor("image.jpg");
-
-        editor.applyFilter(FilterType.BLUR);
-        editor.applyAdjustment(AdjustmentType.HUE, 100);
-        editor.savePreset("BlurHue");
-        editor.export("png", "export.png");
-        editor.applyAdjustment(AdjustmentType.CONTRAST, -100);
-        editor.savePreset("contr");
-
-        ImageEditor editor2 = new ImageEditor("image.jpg");
-        editor2.applyPreset("BlurHue");
-        editor2.export("png", "export2.png");
-        editor2.applyPreset("contr");
-        editor2.export("png", "export3.png");
-    }
 }
 
 

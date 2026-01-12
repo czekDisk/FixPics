@@ -56,6 +56,10 @@ public class PresetManager {
         return presets.keySet();
     }
 
+    public boolean containsPreset(String presetName){
+        return presets.containsKey(presetName);
+    }
+
     private void serialize(){
         ObjectMapper mapper = new ObjectMapper();
 
@@ -66,6 +70,7 @@ public class PresetManager {
             e.printStackTrace();
         }
     }
+
 
 
 
