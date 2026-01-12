@@ -8,4 +8,5 @@ public enum FilterPresets implements FilterType {
     NOISE,
     PIXELBLUR,
     SEPIA,
+    SEGMENTATION
 }

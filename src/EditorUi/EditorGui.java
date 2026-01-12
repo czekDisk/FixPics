@@ -28,6 +28,7 @@ public class EditorGui extends JFrame {
     private JPanel toolbar;
     private JPanel left;
     private JPanel slidersPanel;
+    private JPanel filterPanel;
     private JLabel filterLabel;
     private JToggleButton darkToggle;
     private boolean darkTheme = false;
@@ -75,13 +76,10 @@ public class EditorGui extends JFrame {
         toolbar.add(Box.createHorizontalStrut(8));
         toolbar.add(darkToggle);
 
-
         JPanel top = new JPanel(new BorderLayout());
         top.add(toolbar, BorderLayout.CENTER);
 
-
         left = new JPanel(new BorderLayout());
-
 
         slidersPanel = new JPanel();
         slidersPanel.setLayout(new BoxLayout(slidersPanel, BoxLayout.Y_AXIS));
@@ -90,16 +88,23 @@ public class EditorGui extends JFrame {
         int SLIDER_WIDTH = 200;
         for (AdjustmentType type : AdjustmentType.values()) {
             JPanel p = new JPanel(new BorderLayout());
+            p.setBackground(Color.WHITE);
+
             JLabel l = new JLabel(type.name());
             l.setPreferredSize(new Dimension(LABEL_WIDTH, l.getPreferredSize().height));
             l.setForeground(Color.BLACK);
+
             JSlider s = new JSlider(-100, 100, 0);
             s.setUI(new CustomSliderUI(s));
+            s.setFocusable(false);
+            s.setMajorTickSpacing(50);
+            s.setMinorTickSpacing(25);
             s.setPaintTicks(true);
             s.setPaintLabels(true);
             s.setPreferredSize(new Dimension(SLIDER_WIDTH, s.getPreferredSize().height));
             s.addChangeListener(new AdjustmentChangeListener(type));
             sliders.put(type, s);
+
             p.add(l, BorderLayout.WEST);
             p.add(s, BorderLayout.CENTER);
             p.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
@@ -107,7 +112,7 @@ public class EditorGui extends JFrame {
         }
 
 
-        JPanel filterPanel = new JPanel(new BorderLayout());
+        filterPanel = new JPanel(new BorderLayout());
         filterLabel = new JLabel("Filter:");
         filterPanel.add(filterLabel, BorderLayout.WEST);
         filterPanel.add(filterBox, BorderLayout.CENTER);
@@ -119,20 +124,13 @@ public class EditorGui extends JFrame {
 
         left.add(leftCenter, BorderLayout.CENTER);
 
-
-
         add(top, BorderLayout.NORTH);
-
         add(left, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
-
 
         undoBtn.addActionListener(e -> doUndo());
         redoBtn.addActionListener(e -> doRedo());
         filterBox.addActionListener(e -> applySelectedFilter());
-
-
-
 
         setControlsEnabled(false);
         applyTheme(darkTheme);
@@ -163,12 +161,14 @@ public class EditorGui extends JFrame {
         Color fg = darkTheme ? Color.WHITE : Color.BLACK;
         getContentPane().setBackground(bg);
         if (mainPanel != null) mainPanel.setBackground(bg);
+        darkToggle.setText(darkTheme ? "Light" : "Dark");
         imageLabel.setOpaque(true);
         imageLabel.setBackground(bg);
         imageLabel.setForeground(fg);
         if (toolbar != null) toolbar.setBackground(bg);
         if (left != null) left.setBackground(bg);
         if (slidersPanel != null) slidersPanel.setBackground(bg);
+        if (filterPanel != null) filterPanel.setBackground(bg);
         if (filterLabel != null) filterLabel.setForeground(fg);
         if (filterBox != null) { filterBox.setBackground(bg); filterBox.setForeground(fg); }
         if (toolbar != null) {
@@ -176,18 +176,18 @@ public class EditorGui extends JFrame {
                 if (c instanceof AbstractButton) styleToolbarButton((AbstractButton) c);
             }
         }
-       
+
         styleToolbarButton(undoBtn);
         styleToolbarButton(redoBtn);
-        
+
         if (slidersPanel != null) {
             for (Component comp : slidersPanel.getComponents()) {
                 if (comp instanceof JPanel) {
                     JPanel p = (JPanel) comp;
+                    p.setBackground(bg);
                     if (p.getComponentCount() > 0 && p.getComponent(0) instanceof JLabel) {
                         JLabel lab = (JLabel) p.getComponent(0);
-                        
-                        lab.setForeground(Color.BLACK);
+                        lab.setForeground(fg);
                         lab.setBackground(bg);
                     }
                 }
@@ -311,6 +311,7 @@ public class EditorGui extends JFrame {
             if (programmaticUpdate) return; // ignore when controls are being updated from state
             if (editor == null) return;
             JSlider s = (JSlider) e.getSource();
+            s.repaint();  // niestety konieczne jest przerysowywanie przy zmianie, inaczej jest bug paska
             if (!s.getValueIsAdjusting()) {
                 int val = s.getValue();
                 editor.applyAdjustment(type, val);
@@ -353,7 +354,7 @@ public class EditorGui extends JFrame {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                editor.exportPreview(Format, Path, 100);
+                editor.export(Format, Path);
                 return null;
             }
 

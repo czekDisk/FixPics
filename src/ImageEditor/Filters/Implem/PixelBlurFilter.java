@@ -3,8 +3,6 @@ package ImageEditor.Filters.Implem;
 import ImageEditor.Filters.FilterStrategy;
 
 import java.awt.image.BufferedImage;
-import com.aparapi.Kernel;
-import com.aparapi.Range;
 
 public class PixelBlurFilter extends FilterStrategy {
     /**
