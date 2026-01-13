@@ -223,8 +223,6 @@ public class EditorGui extends JFrame {
             currentWorker.cancel(true);
         }
 
-        imageLabel.setText("Rendering...");
-        imageLabel.setIcon(null);
         currentWorker = new SwingWorker<BufferedImage, Void>() {
             @Override
             protected BufferedImage doInBackground() throws Exception {
