@@ -56,6 +56,7 @@ public class Utils {
             case PIXELBLUR -> new PixelBlurFilter();
             case SEPIA -> new SepiaFilter();
             case SEGMENTATION -> new SegmentationFilter();
+            case EDGEDETECTION -> new EdgeDetectionFilter();
         };
     }
 
