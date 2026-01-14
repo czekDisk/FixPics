@@ -9,5 +9,6 @@ public enum FilterType implements OperationType {
     PIXELBLUR,
     SEPIA,
     SEGMENTATION,
-    EDGEDETECTION
+    EDGEDETECTION,
+    BINARIZATION,
 }
