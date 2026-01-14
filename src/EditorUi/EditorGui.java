@@ -16,7 +16,7 @@ import java.util.EnumMap;
 
 public class EditorGui extends JFrame {
     private ImageEditor editor;
-    private JLabel imageLabel;
+    private imagePanel imageLabel;
     private EnumMap<AdjustmentType, JSlider> sliders;
     private JComboBox<FilterType> filterBox;
     private JButton undoBtn;
@@ -35,7 +35,7 @@ public class EditorGui extends JFrame {
 
     public EditorGui() {
         sliders = new EnumMap<>(AdjustmentType.class);
-        imageLabel = new JLabel("No image loaded", SwingConstants.CENTER);
+        imageLabel = new imagePanel();
         filterBox = new JComboBox<>(FilterType.values());
         filterBox.setBackground(Color.WHITE);
         filterBox.setForeground(Color.BLACK);
@@ -131,6 +131,8 @@ public class EditorGui extends JFrame {
         undoBtn.addActionListener(e -> doUndo());
         redoBtn.addActionListener(e -> doRedo());
         filterBox.addActionListener(e -> applySelectedFilter());
+
+
 
         setControlsEnabled(false);
         applyTheme(darkTheme);
@@ -234,25 +236,10 @@ public class EditorGui extends JFrame {
                 if (isCancelled()) return;
                 try {
                     BufferedImage img = get();
-                    int labelW = imageLabel.getWidth();
-                    int labelH = imageLabel.getHeight();
-                    BufferedImage displayImg = img;
-                    if (labelW > 0 && labelH > 0 && (img.getWidth() > labelW || img.getHeight() > labelH)) {
-                        double sx = (double) labelW / img.getWidth();
-                        double sy = (double) labelH / img.getHeight();
-                        double s = Math.min(sx, sy);
-                        int newW = Math.max(1, (int) Math.round(img.getWidth() * s));
-                        int newH = Math.max(1, (int) Math.round(img.getHeight() * s));
-                        BufferedImage scaled = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
-                        Graphics2D g2 = scaled.createGraphics();
-                        g2.drawImage(img, 0, 0, newW, newH, null);
-                        g2.dispose();
-                        displayImg = scaled;
-                    }
-                    imageLabel.setIcon(new ImageIcon(displayImg));
-                    imageLabel.setText(null);
+
+                    imageLabel.setImage(img);
                 } catch (Exception ex) {
-                    imageLabel.setText("Error rendering preview");
+                    //
                 }
             }
         };
