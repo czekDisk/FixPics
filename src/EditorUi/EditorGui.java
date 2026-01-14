@@ -18,6 +18,7 @@ public class EditorGui extends JFrame {
     private ImageEditor editor;
     private imagePanel imageLabel;
     private EnumMap<AdjustmentType, JSlider> sliders;
+    private EnumMap<AdjustmentType, JLabel> valueLabels;
     private JComboBox<FilterType> filterBox;
     private JButton undoBtn;
     private JButton redoBtn;
@@ -35,8 +36,10 @@ public class EditorGui extends JFrame {
 
     public EditorGui() {
         sliders = new EnumMap<>(AdjustmentType.class);
+        valueLabels = new EnumMap<>(AdjustmentType.class);
         imageLabel = new imagePanel();
         filterBox = new JComboBox<>(FilterType.values());
+        filterBox.setPreferredSize(new Dimension(300, 40));
         filterBox.setBackground(Color.WHITE);
         filterBox.setForeground(Color.BLACK);
         undoBtn = new RoundedButton("Undo");
@@ -105,6 +108,13 @@ public class EditorGui extends JFrame {
             s.addChangeListener(new AdjustmentChangeListener(type));
             sliders.put(type, s);
 
+            JLabel valueLabel = new JLabel("0");
+            valueLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            valueLabel.setForeground(Color.BLACK);
+            valueLabel.setVisible(false);
+            valueLabels.put(type, valueLabel);
+
+            p.add(valueLabel, BorderLayout.NORTH);
             p.add(l, BorderLayout.WEST);
             p.add(s, BorderLayout.CENTER);
             p.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
@@ -147,19 +157,28 @@ public class EditorGui extends JFrame {
     }
 
     private void styleToolbarButton(AbstractButton b) {
-        Color bg = darkTheme ? Color.BLACK : Color.WHITE;
+        Color bg = darkTheme ? new Color(45, 45, 45) : Color.WHITE;
         Color fg = darkTheme ? Color.WHITE : Color.BLACK;
         b.setBackground(bg);
         b.setForeground(fg);
         b.setFocusPainted(false);
-        b.setContentAreaFilled(false);
-        b.setOpaque(false);
+        if (b instanceof RoundedButton || b instanceof RoundedToggleButton) {
+            b.setContentAreaFilled(false);
+            b.setOpaque(false);
+            b.setBorderPainted(false);
+        } else {
+            b.setContentAreaFilled(true);
+            b.setOpaque(true);
+            b.setBorder(BorderFactory.createLineBorder(darkTheme ? new Color(50, 53, 67) : new Color(200, 202, 207), 1));
+        }
         b.setPreferredSize(new Dimension(100, 28));
     }
 
     private void applyTheme(boolean dark) {
         darkTheme = dark;
-        Color bg = darkTheme ? Color.BLACK : Color.WHITE;
+        Color bg = darkTheme ? new Color(15, 18, 28) : new Color(248, 250, 255);
+        Color panelBg = darkTheme ? new Color(25, 28, 40) : new Color(250, 252, 255);
+        Color buttonBg = darkTheme ? new Color(40, 43, 55) : new Color(245, 247, 252);
         Color fg = darkTheme ? Color.WHITE : Color.BLACK;
         getContentPane().setBackground(bg);
         if (mainPanel != null) mainPanel.setBackground(bg);
@@ -167,15 +186,30 @@ public class EditorGui extends JFrame {
         imageLabel.setOpaque(true);
         imageLabel.setBackground(bg);
         imageLabel.setForeground(fg);
-        if (toolbar != null) toolbar.setBackground(bg);
-        if (left != null) left.setBackground(bg);
-        if (slidersPanel != null) slidersPanel.setBackground(bg);
-        if (filterPanel != null) filterPanel.setBackground(bg);
+        if (toolbar != null) toolbar.setBackground(panelBg);
+        if (left != null) left.setBackground(panelBg);
+        if (slidersPanel != null) slidersPanel.setBackground(panelBg);
+        if (filterPanel != null) {
+            filterPanel.setBackground(panelBg);
+            filterPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        }
         if (filterLabel != null) filterLabel.setForeground(fg);
-        if (filterBox != null) { filterBox.setBackground(bg); filterBox.setForeground(fg); }
+        if (filterBox != null) { 
+            filterBox.setBackground(buttonBg); 
+            filterBox.setForeground(fg); 
+            filterBox.setBorder(BorderFactory.createLineBorder(darkTheme ? new Color(50, 53, 67) : new Color(200, 202, 207), 1));
+        }
         if (toolbar != null) {
             for (Component c : toolbar.getComponents()) {
-                if (c instanceof AbstractButton) styleToolbarButton((AbstractButton) c);
+                if (c instanceof AbstractButton) {
+                    AbstractButton b = (AbstractButton) c;
+                    b.setBackground(buttonBg);
+                    b.setForeground(fg);
+                    if (!(b instanceof RoundedButton || b instanceof RoundedToggleButton)) {
+                        b.setOpaque(true);
+                        b.setBorder(BorderFactory.createLineBorder(darkTheme ? new Color(50, 53, 67) : new Color(200, 202, 207), 1));
+                    }
+                }
             }
         }
 
@@ -186,21 +220,24 @@ public class EditorGui extends JFrame {
             for (Component comp : slidersPanel.getComponents()) {
                 if (comp instanceof JPanel) {
                     JPanel p = (JPanel) comp;
-                    p.setBackground(bg);
-                    if (p.getComponentCount() > 0 && p.getComponent(0) instanceof JLabel) {
-                        JLabel lab = (JLabel) p.getComponent(0);
-                        lab.setForeground(fg);
-                        lab.setBackground(bg);
+                    p.setBackground(panelBg);
+                    for (Component c : p.getComponents()) {
+                        if (c instanceof JLabel) {
+                            ((JLabel) c).setForeground(fg);
+                            ((JLabel) c).setBackground(panelBg);
+                        }
                     }
                 }
             }
         }
         for (JSlider s : sliders.values()) {
-            s.setBackground(bg);
+            s.setBackground(panelBg);
             s.setForeground(fg);
+            s.setOpaque(true);
+            s.setBorder(null);
             s.repaint();
         }
-        CustomSliderUI.setColors(fg, fg);
+        CustomSliderUI.setColors(fg, darkTheme ? new Color(75, 80, 100) : new Color(180, 185, 195));
     }
 
     private void openFile() {
@@ -287,7 +324,12 @@ public class EditorGui extends JFrame {
             JSlider s = sliders.get(type);
             if (s != null){
                 Integer val = state.getAdjustmentState().get(type);
-                if (val != null) s.setValue(val);
+                if (val != null) {
+                    s.setValue(val);
+                    valueLabels.get(type).setText(String.valueOf(val));
+                } else {
+                    valueLabels.get(type).setText("0");
+                }
             }
         }
 
@@ -311,9 +353,11 @@ public class EditorGui extends JFrame {
             if (programmaticUpdate) return; // ignore when controls are being updated from state
             if (editor == null) return;
             JSlider s = (JSlider) e.getSource();
+            int val = s.getValue();
+            valueLabels.get(type).setText(String.valueOf(val));
+            valueLabels.get(type).setVisible(s.getValueIsAdjusting());
             s.repaint();  // niestety konieczne jest przerysowywanie przy zmianie, inaczej jest bug paska
             if (!s.getValueIsAdjusting()) {
-                int val = s.getValue();
                 editor.applyAdjustment(type, val);
                 scheduleRender();
                 refreshControls();

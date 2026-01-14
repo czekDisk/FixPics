@@ -1,7 +1,13 @@
 package EditorUi;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+
+import javax.swing.JButton;
 
 public class RoundedButton extends JButton {
     private final int arc = 12;
@@ -23,9 +29,10 @@ public class RoundedButton extends JButton {
         g2.setColor(bg);
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
 
-        // Border
-        g2.setColor(getForeground());
-        g2.setStroke(new BasicStroke(2f));
+        // Border - smoother and paler
+        Color borderColor = new Color(120, 120, 130); // Pale bluish gray
+        g2.setColor(borderColor);
+        g2.setStroke(new BasicStroke(1.5f));
         g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, arc, arc);
         g2.dispose();
 
