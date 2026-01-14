@@ -88,10 +88,15 @@ public class ImageEditor {
 
 
     public void applyPreset(String presetName) throws NonExistantPresetException {
-        if (presetManager.containsPreset(presetName)){
+        if (!presetManager.containsPreset(presetName)){
             throw new NonExistantPresetException("there's no such preset");
         }
-        state = presetManager.getPreset(presetName);
+        ImageState preset = presetManager.getPreset(presetName);
+        if (preset == null){
+            throw new NonExistantPresetException("there's no such preset");
+        }
+
+        state.copyFrom(preset);
         history.update();
     }
 

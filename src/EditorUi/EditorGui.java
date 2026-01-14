@@ -4,6 +4,8 @@ import ImageEditor.ImageEditor;
 import ImageEditor.ImageState;
 import ImageEditor.OperationTags.AdjustmentType;
 import ImageEditor.OperationTags.FilterType;
+import Exceptions.NonExistantPresetException;
+import Exceptions.PresetAlreadyExistsException;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -12,6 +14,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 
 public class EditorGui extends JFrame {
@@ -19,6 +23,8 @@ public class EditorGui extends JFrame {
     private imagePanel imageLabel;
     private EnumMap<AdjustmentType, JSlider> sliders;
     private JComboBox<FilterType> filterBox;
+    private JButton openBtn;
+    private JButton exportBtn;
     private JButton undoBtn;
     private JButton redoBtn;
     private int renderScale = 50;
@@ -26,12 +32,21 @@ public class EditorGui extends JFrame {
 
     private JPanel mainPanel;
     private JPanel toolbar;
+    private JPanel fileButtonsPanel;
+    private JPanel toolbarLeft;
+    private JPanel toolbarCenter;
+    private JPanel toolbarRight;
     private JPanel left;
     private JPanel slidersPanel;
     private JPanel filterPanel;
     private JLabel filterLabel;
     private JToggleButton darkToggle;
     private boolean darkTheme = false;
+
+    private JComboBox<String> presetBox;
+    private JButton presetApplyBtn;
+    private JButton presetSaveBtn;
+    private JButton presetDeleteBtn;
 
     public EditorGui() {
         sliders = new EnumMap<>(AdjustmentType.class);
@@ -41,6 +56,10 @@ public class EditorGui extends JFrame {
         filterBox.setForeground(Color.BLACK);
         undoBtn = new RoundedButton("Undo");
         redoBtn = new RoundedButton("Redo");
+        presetBox = new JComboBox<>();
+        presetApplyBtn = new RoundedButton("Apply");
+        presetSaveBtn = new RoundedButton("Save");
+        presetDeleteBtn = new RoundedButton("Delete");
         initUI();
     }
 
@@ -53,9 +72,13 @@ public class EditorGui extends JFrame {
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(imageLabel, BorderLayout.CENTER);
 
-        toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
-        RoundedButton openBtn = new RoundedButton("Open");
-        RoundedButton exportBtn = new RoundedButton("Export");
+        toolbar = new JPanel(new BorderLayout());
+        toolbarLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
+        toolbarCenter = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
+        toolbarRight = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
+
+        openBtn = new RoundedButton("Open");
+        exportBtn = new RoundedButton("Export");
 
         openBtn.addActionListener(e -> openFile());
         exportBtn.addActionListener(e -> exportFile());
@@ -65,16 +88,29 @@ public class EditorGui extends JFrame {
         styleToolbarButton(undoBtn);
         styleToolbarButton(redoBtn);
 
-        toolbar.add(openBtn);
-        toolbar.add(exportBtn);
-        toolbar.add(undoBtn);
-        toolbar.add(redoBtn);
+        fileButtonsPanel = new JPanel(new GridLayout(2, 2, 8, 6));
+        fileButtonsPanel.setOpaque(true);
+        fileButtonsPanel.add(openBtn);
+        fileButtonsPanel.add(exportBtn);
+        fileButtonsPanel.add(undoBtn);
+        fileButtonsPanel.add(redoBtn);
+
+        toolbarLeft.add(fileButtonsPanel);
+
+        toolbarCenter.add(presetBox);
+        toolbarCenter.add(presetApplyBtn);
+        toolbarCenter.add(presetSaveBtn);
+        toolbarCenter.add(presetDeleteBtn);
+
         darkToggle = new RoundedToggleButton("Dark");
         darkToggle.setFocusPainted(false);
         styleToolbarButton(darkToggle);
         darkToggle.addActionListener(e -> applyTheme(darkToggle.isSelected()));
-        toolbar.add(Box.createHorizontalStrut(8));
-        toolbar.add(darkToggle);
+        toolbarRight.add(darkToggle);
+
+        toolbar.add(toolbarLeft, BorderLayout.WEST);
+        toolbar.add(toolbarCenter, BorderLayout.CENTER);
+        toolbar.add(toolbarRight, BorderLayout.EAST);
 
         JPanel top = new JPanel(new BorderLayout());
         top.add(toolbar, BorderLayout.CENTER);
@@ -132,9 +168,14 @@ public class EditorGui extends JFrame {
         redoBtn.addActionListener(e -> doRedo());
         filterBox.addActionListener(e -> applySelectedFilter());
 
+        presetApplyBtn.addActionListener(e -> applySelectedPreset());
+        presetSaveBtn.addActionListener(e -> savePreset());
+        presetDeleteBtn.addActionListener(e -> deletePreset());
+
 
 
         setControlsEnabled(false);
+        refreshPresetBox();
         applyTheme(darkTheme);
         setVisible(true);
     }
@@ -144,6 +185,11 @@ public class EditorGui extends JFrame {
         redoBtn.setEnabled(enabled);
         filterBox.setEnabled(enabled);
         for (JSlider s : sliders.values()) s.setEnabled(enabled);
+
+        presetBox.setEnabled(enabled);
+        presetApplyBtn.setEnabled(enabled);
+        presetSaveBtn.setEnabled(enabled);
+        presetDeleteBtn.setEnabled(enabled);
     }
 
     private void styleToolbarButton(AbstractButton b) {
@@ -157,6 +203,15 @@ public class EditorGui extends JFrame {
         b.setPreferredSize(new Dimension(100, 28));
     }
 
+    private void styleToolbarCombo(JComboBox<?> box) {
+        Color bg = darkTheme ? Color.BLACK : Color.WHITE;
+        Color fg = darkTheme ? Color.WHITE : Color.BLACK;
+        box.setBackground(bg);
+        box.setForeground(fg);
+        box.setPreferredSize(new Dimension(160, 28));
+        box.setFocusable(false);
+    }
+
     private void applyTheme(boolean dark) {
         darkTheme = dark;
         Color bg = darkTheme ? Color.BLACK : Color.WHITE;
@@ -168,19 +223,24 @@ public class EditorGui extends JFrame {
         imageLabel.setBackground(bg);
         imageLabel.setForeground(fg);
         if (toolbar != null) toolbar.setBackground(bg);
+        if (toolbarLeft != null) toolbarLeft.setBackground(bg);
+        if (toolbarCenter != null) toolbarCenter.setBackground(bg);
+        if (toolbarRight != null) toolbarRight.setBackground(bg);
+        if (fileButtonsPanel != null) fileButtonsPanel.setBackground(bg);
         if (left != null) left.setBackground(bg);
         if (slidersPanel != null) slidersPanel.setBackground(bg);
         if (filterPanel != null) filterPanel.setBackground(bg);
         if (filterLabel != null) filterLabel.setForeground(fg);
         if (filterBox != null) { filterBox.setBackground(bg); filterBox.setForeground(fg); }
-        if (toolbar != null) {
-            for (Component c : toolbar.getComponents()) {
-                if (c instanceof AbstractButton) styleToolbarButton((AbstractButton) c);
-            }
-        }
-
+        if (presetBox != null) styleToolbarCombo(presetBox);
+        styleToolbarButton(openBtn);
+        styleToolbarButton(exportBtn);
         styleToolbarButton(undoBtn);
         styleToolbarButton(redoBtn);
+        styleToolbarButton(darkToggle);
+        styleToolbarButton(presetApplyBtn);
+        styleToolbarButton(presetSaveBtn);
+        styleToolbarButton(presetDeleteBtn);
 
         if (slidersPanel != null) {
             for (Component comp : slidersPanel.getComponents()) {
@@ -212,6 +272,7 @@ public class EditorGui extends JFrame {
                 editor = new ImageEditor(path);
                 scheduleRender();
                 setControlsEnabled(true);
+                refreshPresetBox();
                 refreshControls();
             } catch (IOException | IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this, "Cannot open image: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -299,6 +360,87 @@ public class EditorGui extends JFrame {
         }
 
         programmaticUpdate = false;
+
+        refreshPresetBox();
+    }
+
+    private void refreshPresetBox() {
+        Object selectedBefore = presetBox.getSelectedItem();
+        String selectedName = selectedBefore == null ? null : selectedBefore.toString();
+
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        if (editor == null) {
+            model.addElement("None");
+            presetBox.setModel(model);
+            presetApplyBtn.setEnabled(false);
+            presetDeleteBtn.setEnabled(false);
+            return;
+        }
+
+        ArrayList<String> names = new ArrayList<>(editor.getPresetNames());
+        Collections.sort(names);
+        if (names.isEmpty()) {
+            model.addElement("None");
+            presetApplyBtn.setEnabled(false);
+            presetDeleteBtn.setEnabled(false);
+        } else {
+            for (String n : names) model.addElement(n);
+            presetApplyBtn.setEnabled(true);
+            presetDeleteBtn.setEnabled(true);
+        }
+        presetBox.setModel(model);
+        styleToolbarCombo(presetBox);
+
+        if (selectedName != null) {
+            presetBox.setSelectedItem(selectedName);
+        }
+    }
+
+    private void applySelectedPreset() {
+        if (editor == null) return;
+        Object selected = presetBox.getSelectedItem();
+        if (selected == null) return;
+        String name = selected.toString();
+        if (name.equals("None")) return;
+
+        try {
+            editor.applyPreset(name);
+            scheduleRender();
+            refreshControls();
+        } catch (NonExistantPresetException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            refreshPresetBox();
+        }
+    }
+
+    private void savePreset() {
+        if (editor == null) return;
+        String name = JOptionPane.showInputDialog(this, "Preset name:");
+        if (name == null) return;
+        name = name.trim();
+        if (name.isEmpty()) return;
+
+        try {
+            editor.savePreset(name);
+            refreshPresetBox();
+            presetBox.setSelectedItem(name);
+        } catch (PresetAlreadyExistsException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void deletePreset() {
+        if (editor == null) return;
+        Object selected = presetBox.getSelectedItem();
+        if (selected == null) return;
+        String name = selected.toString();
+        if (name.equals("None")) return;
+
+        int res = JOptionPane.showConfirmDialog(this, "Delete preset: " + name + "?", "Confirm", JOptionPane.YES_NO_OPTION);
+        if (res != JOptionPane.YES_OPTION) return;
+
+        editor.removePreset(name);
+        refreshPresetBox();
     }
 
     private class AdjustmentChangeListener implements ChangeListener {

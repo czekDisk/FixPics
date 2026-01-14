@@ -1,4 +1,56 @@
 {
+  "kwiatuszek" : {
+    "adjustmentState" : {
+      "BRIGHTNESS" : 61,
+      "CONTRAST" : -81,
+      "EXPOSURE" : -36,
+      "HUE" : -67,
+      "ILLUMINATION" : -49,
+      "SATURATION" : -44,
+      "SHARPNESS" : -53,
+      "TEMPERATURE" : 75
+    },
+    "filter" : "NOFILTER"
+  },
+  "A" : {
+    "adjustmentState" : {
+      "BRIGHTNESS" : 0,
+      "CONTRAST" : -100,
+      "EXPOSURE" : 0,
+      "HUE" : 100,
+      "ILLUMINATION" : 0,
+      "SATURATION" : 0,
+      "SHARPNESS" : 0,
+      "TEMPERATURE" : 0
+    },
+    "filter" : "BLUR"
+  },
+  "ad" : {
+    "adjustmentState" : {
+      "BRIGHTNESS" : 0,
+      "CONTRAST" : 0,
+      "EXPOSURE" : 0,
+      "HUE" : 100,
+      "ILLUMINATION" : 0,
+      "SATURATION" : 0,
+      "SHARPNESS" : 0,
+      "TEMPERATURE" : 0
+    },
+    "filter" : "BLUR"
+  },
+  "XDDD" : {
+    "adjustmentState" : {
+      "BRIGHTNESS" : 0,
+      "CONTRAST" : 0,
+      "EXPOSURE" : -47,
+      "HUE" : -24,
+      "ILLUMINATION" : 36,
+      "SATURATION" : 0,
+      "SHARPNESS" : -53,
+      "TEMPERATURE" : 75
+    },
+    "filter" : "NOFILTER"
+  },
   "contr" : {
     "adjustmentState" : {
       "BRIGHTNESS" : 0,
@@ -11,6 +63,19 @@
       "TEMPERATURE" : 0
     },
     "filter" : "BLUR"
+  },
+  "egeh" : {
+    "adjustmentState" : {
+      "BRIGHTNESS" : 61,
+      "CONTRAST" : -81,
+      "EXPOSURE" : -36,
+      "HUE" : -67,
+      "ILLUMINATION" : -49,
+      "SATURATION" : -44,
+      "SHARPNESS" : -53,
+      "TEMPERATURE" : 75
+    },
+    "filter" : "GRAYSCALE"
   },
   "BlurHue" : {
     "adjustmentState" : {
