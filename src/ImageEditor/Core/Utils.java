@@ -57,6 +57,7 @@ public class Utils {
             case SEPIA -> new SepiaFilter();
             case SEGMENTATION -> new SegmentationFilter();
             case EDGEDETECTION -> new EdgeDetectionFilter();
+            case BINARIZATION -> new BinarizationFilter();
         };
     }
 
