@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.Stack;
 
 
-public class HistoryManager {
+public class HistoryManager implements Observer {
     private ImageState currState;
     private Stack<ImageState> undo;
     private Stack<ImageState> redo;
@@ -19,6 +19,7 @@ public class HistoryManager {
     }
 
 
+    @Override
     public void update(){
         redo.clear();
 

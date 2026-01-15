@@ -25,6 +25,19 @@
     },
     "filter" : "BLUR"
   },
+  "b" : {
+    "adjustmentState" : {
+      "BRIGHTNESS" : -49,
+      "CONTRAST" : 61,
+      "EXPOSURE" : -57,
+      "HUE" : -84,
+      "ILLUMINATION" : 51,
+      "SATURATION" : -19,
+      "SHARPNESS" : 52,
+      "TEMPERATURE" : 0
+    },
+    "filter" : "NOFILTER"
+  },
   "ad" : {
     "adjustmentState" : {
       "BRIGHTNESS" : 0,

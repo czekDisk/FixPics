@@ -8,19 +8,22 @@ import ImageEditor.Core.HistoryManager;
 import ImageEditor.Core.IOManager;
 import ImageEditor.Core.ImageRenderer;
 import ImageEditor.OperationTags.FilterType;
+import ImageEditor.Core.Observer;
+import ImageEditor.Core.Subject;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
-
-
-public class ImageEditor {
+public class ImageEditor implements Subject {
     private final BufferedImage originalImage;
     private ImageState state;
     private HistoryManager history;
     private IOManager io;
     private ImageRenderer imageRenderer;
     private PresetManager presetManager;
+    private final List<Observer> observers = new ArrayList<>();
 
     public ImageEditor(String filepath) throws IOException {
         this.io = new IOManager(filepath);
@@ -28,6 +31,8 @@ public class ImageEditor {
         this.originalImage = io.getImage();
         this.state = new  ImageState();
         this.history = new HistoryManager(state);
+        // register history manager as observer so it receives automatic updates
+        registerObserver(history);
         this.presetManager = new PresetManager();
         this.imageRenderer = new ImageRenderer(originalImage);
 
@@ -35,12 +40,12 @@ public class ImageEditor {
 
     public void applyAdjustment(AdjustmentType type, int value){
         state.getAdjustmentState().put(type, value);
-        history.update();
+        notifyObservers();
     }
 
     public void applyFilter(FilterType type){
             state.setFilter(type);
-            history.update();
+            notifyObservers();
     }
 
     public void undo(){
@@ -97,7 +102,7 @@ public class ImageEditor {
         }
 
         state.copyFrom(preset);
-        history.update();
+        notifyObservers();
     }
 
     public void savePreset(String presetName) throws PresetAlreadyExistsException {
@@ -110,6 +115,24 @@ public class ImageEditor {
 
     public Set<String> getPresetNames(){
         return presetManager.getPresetNames();
+    }
+
+    @Override
+    public void registerObserver(Observer o) {
+        if (o == null) return;
+        if (!observers.contains(o)) observers.add(o);
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o : new ArrayList<>(observers)) {
+            o.update();
+        }
     }
 
 
