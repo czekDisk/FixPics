@@ -1,5 +1,18 @@
 {
-  "kwiatuszek" : {
+  "Hue +100%" : {
+    "adjustmentState" : {
+      "BRIGHTNESS" : 0,
+      "CONTRAST" : 0,
+      "EXPOSURE" : 0,
+      "HUE" : 100,
+      "ILLUMINATION" : 0,
+      "SATURATION" : 0,
+      "SHARPNESS" : 0,
+      "TEMPERATURE" : 0
+    },
+    "filter" : "BLUR"
+  },
+  "Custom preset" : {
     "adjustmentState" : {
       "BRIGHTNESS" : 61,
       "CONTRAST" : -81,
@@ -12,72 +25,7 @@
     },
     "filter" : "NOFILTER"
   },
-  "A" : {
-    "adjustmentState" : {
-      "BRIGHTNESS" : 0,
-      "CONTRAST" : -100,
-      "EXPOSURE" : 0,
-      "HUE" : 100,
-      "ILLUMINATION" : 0,
-      "SATURATION" : 0,
-      "SHARPNESS" : 0,
-      "TEMPERATURE" : 0
-    },
-    "filter" : "BLUR"
-  },
-  "b" : {
-    "adjustmentState" : {
-      "BRIGHTNESS" : -49,
-      "CONTRAST" : 61,
-      "EXPOSURE" : -57,
-      "HUE" : -84,
-      "ILLUMINATION" : 51,
-      "SATURATION" : -19,
-      "SHARPNESS" : 52,
-      "TEMPERATURE" : 0
-    },
-    "filter" : "NOFILTER"
-  },
-  "ad" : {
-    "adjustmentState" : {
-      "BRIGHTNESS" : 0,
-      "CONTRAST" : 0,
-      "EXPOSURE" : 0,
-      "HUE" : 100,
-      "ILLUMINATION" : 0,
-      "SATURATION" : 0,
-      "SHARPNESS" : 0,
-      "TEMPERATURE" : 0
-    },
-    "filter" : "BLUR"
-  },
-  "XDDD" : {
-    "adjustmentState" : {
-      "BRIGHTNESS" : 0,
-      "CONTRAST" : 0,
-      "EXPOSURE" : -47,
-      "HUE" : -24,
-      "ILLUMINATION" : 36,
-      "SATURATION" : 0,
-      "SHARPNESS" : -53,
-      "TEMPERATURE" : 75
-    },
-    "filter" : "NOFILTER"
-  },
-  "contr" : {
-    "adjustmentState" : {
-      "BRIGHTNESS" : 0,
-      "CONTRAST" : -100,
-      "EXPOSURE" : 0,
-      "HUE" : 100,
-      "ILLUMINATION" : 0,
-      "SATURATION" : 0,
-      "SHARPNESS" : 0,
-      "TEMPERATURE" : 0
-    },
-    "filter" : "BLUR"
-  },
-  "egeh" : {
+  "Random preset" : {
     "adjustmentState" : {
       "BRIGHTNESS" : 61,
       "CONTRAST" : -81,
@@ -90,10 +38,36 @@
     },
     "filter" : "GRAYSCALE"
   },
+  "Contrast and hue tweak" : {
+    "adjustmentState" : {
+      "BRIGHTNESS" : 0,
+      "CONTRAST" : -100,
+      "EXPOSURE" : 0,
+      "HUE" : 100,
+      "ILLUMINATION" : 0,
+      "SATURATION" : 0,
+      "SHARPNESS" : 0,
+      "TEMPERATURE" : 0
+    },
+    "filter" : "BLUR"
+  },
   "BlurHue" : {
     "adjustmentState" : {
       "BRIGHTNESS" : 0,
       "CONTRAST" : 0,
+      "EXPOSURE" : 0,
+      "HUE" : 100,
+      "ILLUMINATION" : 0,
+      "SATURATION" : 0,
+      "SHARPNESS" : 0,
+      "TEMPERATURE" : 0
+    },
+    "filter" : "BLUR"
+  },
+  "Another custom preset" : {
+    "adjustmentState" : {
+      "BRIGHTNESS" : 0,
+      "CONTRAST" : -100,
       "EXPOSURE" : 0,
       "HUE" : 100,
       "ILLUMINATION" : 0,

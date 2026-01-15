@@ -10,9 +10,9 @@ public class PixelBlurFilter extends FilterStrategy {
      * @param image obraz
      */
     public void applyFilter(BufferedImage image) {
-        int BLOCK_SIZE = 5;  // TODO: PixelBlur ma roznej wielkosci bloki, a nie ma jak przekazac tego przekazac
         int width = image.getWidth();
         int height = image.getHeight();
+        int BLOCK_SIZE = (int)(Math.min(width, height)*0.005);
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
