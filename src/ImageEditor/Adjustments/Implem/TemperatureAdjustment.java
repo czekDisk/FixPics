@@ -20,7 +20,7 @@ public class TemperatureAdjustment extends AdjustmentStrategy {
         int height = image.getHeight();
 
         double scale = (value/200f);
-        int INTENSIVITY = (int)(Utils.MAX_COLOR_VAL*0.4);  // jak bardzo moze rozjasnic maksymalnie
+        int INTENSITY = (int)(Utils.MAX_COLOR_VAL*0.4);  // jak bardzo moze rozjasnic maksymalnie
 
         for (int y=0; y<height; y++) {
             for (int x=0; x<width; x++) {
@@ -31,9 +31,9 @@ public class TemperatureAdjustment extends AdjustmentStrategy {
                 int g = (argb >> 8) & 0xFF;
                 int b = argb & 0xFF;
 
-                r += (int)(scale*INTENSIVITY);
-                g += (int)(scale*INTENSIVITY*0.2);  // *0.2 bo chcemy lekko dodac zielony, zeby obrazek nie byl tylko czerwony/niebieski
-                b -= (int)(scale*INTENSIVITY);
+                r += (int)(scale*INTENSITY);
+                g += (int)(scale*INTENSITY*0.2);  // *0.2 bo chcemy lekko dodac zielony, zeby obrazek nie byl tylko czerwony/niebieski
+                b -= (int)(scale*INTENSITY);
 
                 r = Utils.clamp(r);
                 g = Utils.clamp(g);

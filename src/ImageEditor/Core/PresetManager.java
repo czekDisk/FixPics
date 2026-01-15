@@ -2,8 +2,8 @@ package ImageEditor.Core;
 
 import Exceptions.PresetAlreadyExistsException;
 import ImageEditor.ImageState;
-// import com.fasterxml.jackson.core.type.TypeReference;
-// import com.fasterxml.jackson.databind.ObjectMapper;
+ import com.fasterxml.jackson.core.type.TypeReference;
+ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,22 +16,22 @@ public class PresetManager {
 
 
     public PresetManager(){
-        // ObjectMapper mapper = new ObjectMapper();
+         ObjectMapper mapper = new ObjectMapper();
 
-        // File f = new File("Custom.json");
-        // if(!f.exists() || f.length() == 0){
+         File f = new File("Custom.json");
+         if(!f.exists() || f.length() == 0){
             presets = new HashMap<>();
-        // }
-        // else {
-        //     try {
-        //         presets = mapper.readValue(f,
-        //                 new TypeReference<HashMap<String, ImageState>>() {
-        //                 });
-        //     } catch (IOException e) {
-        //         e.printStackTrace();
-        //         presets = new HashMap<>();
-        //     }
-        // }
+         }
+         else {
+             try {
+                 presets = mapper.readValue(f,
+                         new TypeReference<HashMap<String, ImageState>>() {
+                         });
+             } catch (IOException e) {
+                 e.printStackTrace();
+                 presets = new HashMap<>();
+             }
+         }
     }
 
 
@@ -61,18 +61,15 @@ public class PresetManager {
     }
 
     private void serialize(){
-        // ObjectMapper mapper = new ObjectMapper();
+         ObjectMapper mapper = new ObjectMapper();
 
-        // try {
-        //     mapper.writerWithDefaultPrettyPrinter().writeValue(new File("Custom.json"), presets);
-        // }
-        // catch(IOException e){
-        //     e.printStackTrace();
-        // }
+         try {
+             mapper.writerWithDefaultPrettyPrinter().writeValue(new File("Custom.json"), presets);
+         }
+         catch(IOException e){
+             e.printStackTrace();
+         }
     }
-
-
-
 
 }
 

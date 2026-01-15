@@ -1,6 +1,6 @@
 package ImageEditor;
 
-import Exceptions.NonExistantPresetException;
+import Exceptions.NonExistentPresetException;
 import Exceptions.PresetAlreadyExistsException;
 import ImageEditor.Core.PresetManager;
 import ImageEditor.OperationTags.AdjustmentType;
@@ -85,15 +85,13 @@ public class ImageEditor {
 
 
 
-
-
-    public void applyPreset(String presetName) throws NonExistantPresetException {
+    public void applyPreset(String presetName) throws NonExistentPresetException {
         if (!presetManager.containsPreset(presetName)){
-            throw new NonExistantPresetException("there's no such preset");
+            throw new NonExistentPresetException("There's no such preset");
         }
         ImageState preset = presetManager.getPreset(presetName);
         if (preset == null){
-            throw new NonExistantPresetException("there's no such preset");
+            throw new NonExistentPresetException("There's no such preset");
         }
 
         state.copyFrom(preset);

@@ -5,12 +5,12 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.image.BufferedImage;
 
-class imagePanel extends JPanel {
+class ImagePanel extends JPanel {
 
     private BufferedImage image;
     private String placeholder = "No image loaded";
 
-    public imagePanel() {
+    public ImagePanel() {
         setBackground(Color.DARK_GRAY);
     }
 

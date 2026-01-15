@@ -1,11 +1,14 @@
 package EditorUi;
 
+import Exceptions.NonExistentPresetException;
+import ImageEditor.Core.IOManager;
 import ImageEditor.ImageEditor;
 import ImageEditor.ImageState;
 import ImageEditor.OperationTags.AdjustmentType;
 import ImageEditor.OperationTags.FilterType;
-import Exceptions.NonExistantPresetException;
 import Exceptions.PresetAlreadyExistsException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -20,7 +23,7 @@ import java.util.EnumMap;
 
 public class EditorGui extends JFrame {
     private ImageEditor editor;
-    private imagePanel imageLabel;
+    private ImagePanel imageLabel;
     private EnumMap<AdjustmentType, JSlider> sliders;
     private EnumMap<AdjustmentType, JLabel> valueLabels;
     private JComboBox<FilterType> filterBox;
@@ -52,7 +55,7 @@ public class EditorGui extends JFrame {
     public EditorGui() {
         sliders = new EnumMap<>(AdjustmentType.class);
         valueLabels = new EnumMap<>(AdjustmentType.class);
-        imageLabel = new imagePanel();
+        imageLabel = new ImagePanel();
         filterBox = new JComboBox<>(FilterType.values());
         filterBox.setPreferredSize(new Dimension(300, 40));
         filterBox.setBackground(Color.WHITE);
@@ -67,8 +70,14 @@ public class EditorGui extends JFrame {
     }
 
     private void initUI() {
-        setTitle("Image Editor");
+        setTitle("FixPics");
         setSize(1000, 700);
+        setMinimumSize(new Dimension(750, 525));
+        try {
+            setIconImage(ImageIO.read(new File("icon.png")));
+        } catch (IOException e) {
+            // Nic, pozostaje standardowa ikonka
+        }
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -136,7 +145,7 @@ public class EditorGui extends JFrame {
             JSlider s = new JSlider(-100, 100, 0);
             s.setUI(new CustomSliderUI(s));
             s.setFocusable(false);
-            s.setMajorTickSpacing(50);
+            s.setMajorTickSpacing(100);
             s.setMinorTickSpacing(25);
             s.setPaintTicks(true);
             s.setPaintLabels(true);
@@ -145,21 +154,22 @@ public class EditorGui extends JFrame {
             sliders.put(type, s);
 
             JLabel valueLabel = new JLabel("0");
-            valueLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            valueLabel.setPreferredSize(new Dimension(35, valueLabel.getPreferredSize().height));
+            valueLabel.setHorizontalAlignment(SwingConstants.LEFT);
             valueLabel.setForeground(Color.BLACK);
-            valueLabel.setVisible(false);
+            valueLabel.setVisible(true);
             valueLabels.put(type, valueLabel);
 
-            p.add(valueLabel, BorderLayout.NORTH);
+            p.add(valueLabel, BorderLayout.CENTER);
             p.add(l, BorderLayout.WEST);
-            p.add(s, BorderLayout.CENTER);
+            p.add(s, BorderLayout.EAST);
             p.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
             slidersPanel.add(p);
         }
 
 
         filterPanel = new JPanel(new BorderLayout());
-        filterLabel = new JLabel("Filter:");
+        filterLabel = new JLabel("Filter: ");
         filterPanel.add(filterLabel, BorderLayout.WEST);
         filterPanel.add(filterBox, BorderLayout.CENTER);
 
@@ -242,7 +252,7 @@ public class EditorGui extends JFrame {
         imageLabel.setOpaque(true);
         imageLabel.setBackground(bg);
         imageLabel.setForeground(fg);
-<<<<<<< HEAD
+
         if (toolbar != null) toolbar.setBackground(panelBg);
         if (toolbarLeft != null) toolbarLeft.setBackground(panelBg);
         if (toolbarCenter != null) toolbarCenter.setBackground(panelBg);
@@ -274,6 +284,8 @@ public class EditorGui extends JFrame {
                 }
             }
         }
+        styleToolbarButton(openBtn);
+        styleToolbarButton(exportBtn);
         styleToolbarButton(undoBtn);
         styleToolbarButton(redoBtn);
         styleToolbarButton(darkToggle);
@@ -454,7 +466,7 @@ public class EditorGui extends JFrame {
             editor.applyPreset(name);
             scheduleRender();
             refreshControls();
-        } catch (NonExistantPresetException ex) {
+        } catch (NonExistentPresetException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             refreshPresetBox();
         }
@@ -502,7 +514,7 @@ public class EditorGui extends JFrame {
             JSlider s = (JSlider) e.getSource();
             int val = s.getValue();
             valueLabels.get(type).setText(String.valueOf(val));
-            valueLabels.get(type).setVisible(s.getValueIsAdjusting());
+//            valueLabels.get(type).setVisible(s.getValueIsAdjusting());
             s.repaint();  // niestety konieczne jest przerysowywanie przy zmianie, inaczej jest bug paska
             if (!s.getValueIsAdjusting()) {
                 editor.applyAdjustment(type, val);
