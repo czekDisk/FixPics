@@ -1,10 +1,6 @@
 import EditorUi.EditorCli;
-import ImageEditor.ImageEditor;
-import ImageEditor.OperationTags.AdjustmentType;
 import EditorUi.EditorGui;
 import javax.swing.*;
-import java.io.IOException;
-import java.util.Arrays;
 
 public class Main {
 

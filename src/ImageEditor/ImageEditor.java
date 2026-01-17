@@ -14,7 +14,6 @@ import ImageEditor.Core.Subject;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 public class ImageEditor implements Subject {
     private final BufferedImage originalImage;
@@ -23,7 +22,7 @@ public class ImageEditor implements Subject {
     private IOManager io;
     private ImageRenderer imageRenderer;
     private PresetManager presetManager;
-    private final List<Observer> observers = new ArrayList<>();
+    private ArrayList<Observer> observers = new ArrayList<>();
 
     public ImageEditor(String filepath) throws IOException {
         this.io = new IOManager(filepath);
@@ -44,8 +43,8 @@ public class ImageEditor implements Subject {
     }
 
     public void applyFilter(FilterType type){
-            state.setFilter(type);
-            notifyObservers();
+        state.setFilter(type);
+        notifyObservers();
     }
 
     public void undo(){
@@ -87,7 +86,6 @@ public class ImageEditor implements Subject {
     public ImageState getState(){
         return new ImageState(state);
     }
-
 
 
     public void applyPreset(String presetName) throws NonExistentPresetException {
@@ -133,7 +131,9 @@ public class ImageEditor implements Subject {
         }
     }
 
-
+    public ImageState getPresetState(String presetName) {
+        return presetManager.getPreset(presetName);
+    }
 }
 
 

@@ -22,7 +22,7 @@ public class ExposureAdjustment extends AdjustmentStrategy {
 
         exposureLUT = new int[256];
 
-        double ev = value/50.0;  // zakres value [-100, 100]/50 => zakres EV [-2, 2]
+        double ev = value/100.0;  // zakres value [-100, 100]/50 => zakres EV [-1, 1]
 
         for (int i = 0; i < 256; i++) {
             exposureLUT[i] = Utils.clamp((int)(i*Math.pow(2.0, ev)));

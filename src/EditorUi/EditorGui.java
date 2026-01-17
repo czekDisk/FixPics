@@ -1,7 +1,9 @@
 package EditorUi;
 
 import Exceptions.NonExistentPresetException;
-import ImageEditor.Core.IOManager;
+import ImageEditor.Core.EdgeDetectionSafetyObserver;
+import ImageEditor.Core.ExposureSafetyObserver;
+import ImageEditor.Core.PresetDetectorObserver;
 import ImageEditor.ImageEditor;
 import ImageEditor.ImageState;
 import ImageEditor.OperationTags.AdjustmentType;
@@ -324,6 +326,12 @@ public class EditorGui extends JFrame {
             String path = chooser.getSelectedFile().getAbsolutePath();
             try {
                 editor = new ImageEditor(path);
+
+                // obserwatorzy
+                editor.registerObserver(new ExposureSafetyObserver(editor, true));
+                editor.registerObserver(new PresetDetectorObserver(editor, presetBox));
+                editor.registerObserver(new EdgeDetectionSafetyObserver(editor, true));
+
                 scheduleRender();
                 setControlsEnabled(true);
                 refreshPresetBox();
