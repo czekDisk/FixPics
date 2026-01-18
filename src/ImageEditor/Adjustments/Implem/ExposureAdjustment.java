@@ -6,9 +6,6 @@ import ImageEditor.Core.Utils;
 import java.awt.image.BufferedImage;
 
 public class ExposureAdjustment extends AdjustmentStrategy {
-    //integer zmiany przyjmuje wartości od -100 do 100 jako procent zmiany
-    //dodaj więc skalowanie w sumacyjnych funkcjach
-
     private int [] exposureLUT;
 
     /**
@@ -22,7 +19,7 @@ public class ExposureAdjustment extends AdjustmentStrategy {
 
         exposureLUT = new int[256];
 
-        double ev = value/100.0;  // zakres value [-100, 100]/50 => zakres EV [-1, 1]
+        double ev = value/100.0;  // zakres value [-100, 100]/100 => zakres EV [-1, 1]
 
         for (int i = 0; i < 256; i++) {
             exposureLUT[i] = Utils.clamp((int)(i*Math.pow(2.0, ev)));

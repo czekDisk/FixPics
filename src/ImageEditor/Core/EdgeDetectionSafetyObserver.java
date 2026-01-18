@@ -28,7 +28,7 @@ public class EdgeDetectionSafetyObserver implements Observer {
         int contrast = state.getAdjustmentState().getOrDefault(AdjustmentType.CONTRAST, 0);
         int sharpness = state.getAdjustmentState().getOrDefault(AdjustmentType.SHARPNESS, 0);
 
-        if (contrast > 25 || sharpness > 20) {
+        if (contrast > 20 || sharpness > 25) {
             if (!warningShown) {
 
                 if (isGui) {
